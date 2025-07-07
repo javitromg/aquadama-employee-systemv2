@@ -1,7 +1,6 @@
-/* Estilo general */
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(to bottom right, #e5f3ff, #f7fcff);
+  background: #eef2f5;
   margin: 0;
   padding: 0;
   color: #222;
@@ -11,43 +10,13 @@ h1, h2, h3 {
   color: #1a3f5d;
 }
 
-/* Login */
-.login-container {
-  max-width: 400px;
-  margin: 100px auto;
-  padding: 30px;
-  background: #ffffff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-}
-
-.login-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.login-container label {
-  display: block;
-  margin-bottom: 15px;
-}
-
-.login-container input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  box-sizing: border-box;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-/* Contenedor principal */
 .container {
   max-width: 1000px;
-  margin: 40px auto;
-  background: #ffffff;
+  margin: 30px auto;
+  background: #fff;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 fieldset {
@@ -73,6 +42,7 @@ input[type="email"],
 input[type="tel"],
 input[type="date"],
 input[type="number"],
+input[type="password"],
 input[type="file"] {
   width: 100%;
   padding: 8px 10px;
@@ -85,18 +55,18 @@ input[type="file"] {
 button {
   background-color: #2a75bb;
   color: white;
-  padding: 12px 25px;
+  padding: 10px 20px;
   border: none;
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 button:hover {
   background-color: #1e5b90;
 }
 
-/* Firma */
 canvas {
   border: 1px solid #999;
   background-color: #fff;
@@ -104,7 +74,6 @@ canvas {
   margin-bottom: 10px;
 }
 
-/* Lista de empleados */
 .employee-card {
   border: 1px solid #ccc;
   background: #f6f9fc;
@@ -119,4 +88,18 @@ canvas {
 
 .hidden {
   display: none;
+}
+
+.login-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 30px;
+  background: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
 }
