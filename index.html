@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sistema de Registro de Empleados - Aquadama</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <h1>Registro de Empleados</h1>
     <form id="employeeForm">
-      <label>Nombre:<input type="text" name="nombre" required></label>
-      <label>DNI:<input type="text" name="dni" required></label>
-      <label>Teléfono:<input type="tel" name="telefono" required></label>
-      <label>Email:<input type="email" name="email" required></label>
-      <label>IBAN:<input type="text" name="iban" required></label>
+      <label>Nombre:<input type="text" name="nombre" required /></label>
+      <label>DNI:<input type="text" name="dni" required /></label>
+      <label>Teléfono:<input type="tel" name="telefono" required /></label>
+      <label>Email:<input type="email" name="email" required /></label>
+      <label>IBAN:<input type="text" name="iban" required /></label>
 
-      <label>Foto DNI Delante:<input type="file" name="fotoDNIDelante" accept="image/*" required></label>
-      <label>Foto DNI Detrás:<input type="file" name="fotoDNIDetras" accept="image/*" required></label>
-      <label>Foto Personal:<input type="file" name="fotoPersonal" accept="image/*" required></label>
+      <label>Foto DNI Delante:<input type="file" name="fotoDNIDelante" accept="image/*" required /></label>
+      <label>Foto DNI Detrás:<input type="file" name="fotoDNIDetras" accept="image/*" required /></label>
+      <label>Foto Personal:<input type="file" name="fotoPersonal" accept="image/*" required /></label>
+
+      <div class="signature">
+        <p>Firma del empleado:</p>
+        <canvas id="signaturePad" width="400" height="150"></canvas>
+        <button type="button" onclick="clearSignature()">🗑️ Limpiar Firma</button>
+      </div>
 
       <button type="submit">Registrar Empleado</button>
     </form>
 
-    <hr>
+    <hr />
     <div id="employeeList"></div>
   </div>
 
