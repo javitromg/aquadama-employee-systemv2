@@ -6,6 +6,7 @@ let employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
 let employeeCounter = parseInt(localStorage.getItem("aquadama_counter") || "0");
 let admins = JSON.parse(localStorage.getItem("aquadama_admins") || "{}");
 
+// Crear usuario admin por defecto si no existe
 if (!admins[DEFAULT_USER]) {
   admins[DEFAULT_USER] = DEFAULT_PASS;
   localStorage.setItem("aquadama_admins", JSON.stringify(admins));
