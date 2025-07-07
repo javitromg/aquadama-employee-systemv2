@@ -47,12 +47,8 @@
     const admins = JSON.parse(localStorage.getItem("aquadama_admins") || "{}");
     const employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
 
-    // ==== Logout ====
-    document.getElementById("logout").addEventListener("click", () => {
-      location.href = "index.html";
-    });
+    document.getElementById("logout").addEventListener("click", () => location.href = "index.html");
 
-    // ==== Navegación ====
     document.getElementById("nav-empleados").addEventListener("click", () => showPanel("panel-empleados"));
     document.getElementById("nav-usuarios").addEventListener("click", () => showPanel("panel-usuarios"));
     document.getElementById("nav-pass").addEventListener("click", () => showPanel("panel-pass"));
@@ -62,7 +58,6 @@
       document.getElementById(id).classList.remove("hidden");
     }
 
-    // ==== Mostrar empleados ====
     function loadEmployeeList() {
       const list = document.getElementById("employeeList");
       list.innerHTML = "";
@@ -89,6 +84,12 @@
             <p><strong>Centro:</strong> ${emp.centro || '-'}</p>
             <p><strong>IBAN:</strong> ${emp.iban}</p>
             <p><strong>SS:</strong> ${emp.ss}</p>
+            <div style="margin-top:10px;">
+              ${emp.fotoDNIDelante ? `<button onclick="downloadFile('${emp.fotoDNIDelante}', 'DNI_Delante_${emp.id}.jpg')">🆔 DNI Delante</button>` : ''}
+              ${emp.fotoDNIDetras ? `<button onclick="downloadFile('${emp.fotoDNIDetras}', 'DNI_Detras_${emp.id}.jpg')">🆔 DNI Detrás</button>` : ''}
+              ${emp.fotoPersonal ? `<button onclick="downloadFile('${emp.fotoPersonal}', 'Foto_${emp.id}.jpg')">📸 Foto</button>` : ''}
+              ${emp.firma ? `<button onclick="downloadFile('${emp.firma}', 'Firma_${emp.id}.png')">✍️ Firma</button>` : ''}
+            </div>
           </div>
         `;
         list.appendChild(card);
@@ -111,7 +112,15 @@
       btn.textContent = hidden ? "🔼 Ocultar Detalles" : "🔽 Ver Detalles";
     }
 
-    // ==== Crear nuevo administrador ====
+    function downloadFile(dataUrl, filename) {
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
     document.getElementById("createAdminForm").addEventListener("submit", e => {
       e.preventDefault();
       const user = document.getElementById("newAdminUser").value.trim();
@@ -125,7 +134,6 @@
       alert("✅ Administrador creado");
     });
 
-    // ==== Cambiar contraseña ====
     document.getElementById("changePassForm").addEventListener("submit", e => {
       e.preventDefault();
       const current = document.getElementById("currentPass").value.trim();
@@ -138,7 +146,6 @@
       alert("✅ Contraseña actualizada");
     });
 
-    // ==== Lista de administradores ====
     function renderAdminList() {
       const list = document.getElementById("adminList");
       list.innerHTML = "";
