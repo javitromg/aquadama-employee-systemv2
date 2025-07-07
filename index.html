@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registro de Empleados | Aquadama</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
   <main>
@@ -75,5 +77,40 @@
   </main>
 
   <script src="main.js"></script>
+  <script>
+    async function generarPDF(emp) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(18);
+      doc.text("Ficha de Registro - Aquadama", 20, 20);
+      doc.setFontSize(12);
+
+      doc.text(`ID: ${emp.id}`, 20, 30);
+      doc.text(`Nombre: ${emp.nombre} ${emp.apellidos}`, 20, 40);
+      doc.text(`DNI: ${emp.dni}`, 20, 50);
+      doc.text(`Fecha de nacimiento: ${emp.fechaNacimiento}`, 20, 60);
+      doc.text(`Email: ${emp.email}`, 20, 70);
+      doc.text(`Teléfono: ${emp.telefono}`, 20, 80);
+      doc.text(`Dirección: ${emp.direccion}, ${emp.localidad}, ${emp.provincia} (${emp.cp})`, 20, 90);
+      doc.text(`Centro: ${emp.centro}`, 20, 100);
+      doc.text(`SS: ${emp.ss}`, 20, 110);
+      doc.text(`IBAN: ${emp.iban}`, 20, 120);
+      doc.text(`Fecha de registro: ${emp.fechaRegistro}`, 20, 130);
+
+      const firma = new Image();
+      firma.src = emp.firma;
+
+      await new Promise(resolve => {
+        firma.onload = () => {
+          doc.text("Firma:", 20, 145);
+          doc.addImage(firma, "PNG", 20, 150, 60, 30);
+          resolve();
+        };
+      });
+
+      doc.save(`Ficha_Empleado_${emp.id}.pdf`);
+    }
+  </script>
 </body>
 </html>
