@@ -1,62 +1,116 @@
+/* Estilo general */
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #eef2f5;
+  background: linear-gradient(to bottom right, #e5f3ff, #f7fcff);
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  color: #222;
 }
 
-.container {
-  max-width: 900px;
-  margin: auto;
-  background: #fff;
+h1, h2, h3 {
+  color: #1a3f5d;
+}
+
+/* Login */
+.login-container {
+  max-width: 400px;
+  margin: 100px auto;
   padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-container label {
+  display: block;
+  margin-bottom: 15px;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Contenedor principal */
+.container {
+  max-width: 1000px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+fieldset {
+  border: 1px solid #ccd;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+legend {
+  font-weight: bold;
+  color: #2a5d89;
+  padding: 0 10px;
 }
 
 label {
   display: block;
-  margin-bottom: 15px;
-  font-weight: 600;
+  margin-bottom: 12px;
 }
 
 input[type="text"],
 input[type="email"],
 input[type="tel"],
+input[type="date"],
+input[type="number"],
 input[type="file"] {
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
+  padding: 8px 10px;
+  margin-top: 4px;
   border-radius: 5px;
+  border: 1px solid #bbb;
+  box-sizing: border-box;
 }
 
 button {
-  background: #3498db;
+  background-color: #2a75bb;
   color: white;
   padding: 12px 25px;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
   font-weight: bold;
-  margin-top: 10px;
+  cursor: pointer;
 }
 
 button:hover {
-  background: #2980b9;
+  background-color: #1e5b90;
 }
 
-hr {
-  margin: 40px 0;
+/* Firma */
+canvas {
+  border: 1px solid #999;
+  background-color: #fff;
+  display: block;
+  margin-bottom: 10px;
 }
 
+/* Lista de empleados */
 .employee-card {
   border: 1px solid #ccc;
-  padding: 20px;
+  background: #f6f9fc;
   border-radius: 8px;
-  margin-bottom: 20px;
-  background: #f9f9f9;
+  padding: 15px 20px;
+  margin-bottom: 15px;
 }
 
 .employee-card h3 {
@@ -65,15 +119,4 @@ hr {
 
 .hidden {
   display: none;
-}
-
-.signature {
-  margin: 20px 0;
-}
-
-canvas {
-  border: 1px solid #aaa;
-  background: #fff;
-  display: block;
-  margin-bottom: 10px;
 }
