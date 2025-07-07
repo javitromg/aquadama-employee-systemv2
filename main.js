@@ -28,7 +28,6 @@ function toBase64(file) {
   });
 }
 
-// Registro de empleados
 document.getElementById("employeeForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const fd = new FormData(e.target);
@@ -46,14 +45,11 @@ document.getElementById("employeeForm").addEventListener("submit", async (e) => 
   localStorage.setItem("aquadama_employees", JSON.stringify(employees));
   localStorage.setItem("aquadama_counter", employeeCounter.toString());
 
-  await generarPDF(emp); // Descarga automática
-
   e.target.reset();
   clearSignature();
   alert("✅ Empleado registrado correctamente");
 });
 
-// Login de administrador
 document.getElementById("loginForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const user = document.getElementById("loginUser").value.trim();
@@ -65,7 +61,6 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
   }
 });
 
-// Inicializar firma en canvas
 document.addEventListener("DOMContentLoaded", () => {
   canvas = document.getElementById("signaturePad");
   if (canvas) {
