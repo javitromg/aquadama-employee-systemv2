@@ -4,31 +4,35 @@ const DEFAULT_PASS = "Ab915712@";
 let canvas, ctx, isDrawing = false;
 let employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
 let employeeCounter = parseInt(localStorage.getItem("aquadama_counter") || "0");
+let admins = JSON.parse(localStorage.getItem("aquadama_admins") || "{}");
+if (!admins[DEFAULT_USER]) {
+  admins[DEFAULT_USER] = DEFAULT_PASS;
+  localStorage.setItem("aquadama_admins", JSON.stringify(admins));
+}
 
-// Login
+// ==== LOGIN ====
 document.getElementById("loginForm").addEventListener("submit", function (e) {
   e.preventDefault();
   const user = document.getElementById("loginUser").value.trim();
   const pass = document.getElementById("loginPass").value.trim();
 
-  if (user === DEFAULT_USER && pass === DEFAULT_PASS) {
+  if (admins[user] && admins[user] === pass) {
     document.getElementById("loginContainer").classList.add("hidden");
     document.getElementById("mainContainer").classList.remove("hidden");
+    renderAdminList();
     loadEmployeeList();
   } else {
     alert("❌ Usuario o contraseña incorrectos");
   }
 });
 
-// Firma
+// ==== FIRMA DIGITAL ====
 function clearSignature() {
   if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
-
 function getSignatureData() {
   return canvas.toDataURL();
 }
-
 function toBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -38,7 +42,7 @@ function toBase64(file) {
   });
 }
 
-// Guardar empleado
+// ==== GUARDAR EMPLEADO ====
 function saveEmployee(employee) {
   employee.id = ++employeeCounter;
   employee.fechaRegistro = new Date().toLocaleDateString("es-ES");
@@ -47,7 +51,7 @@ function saveEmployee(employee) {
   localStorage.setItem("aquadama_counter", employeeCounter.toString());
 }
 
-// Mostrar lista de empleados
+// ==== MOSTRAR EMPLEADOS ====
 function loadEmployeeList() {
   const list = document.getElementById("employeeList");
   list.innerHTML = "";
@@ -102,7 +106,7 @@ function downloadFile(dataUrl, filename) {
   document.body.removeChild(a);
 }
 
-// Formulario
+// ==== FORMULARIO DE EMPLEADO ====
 document.getElementById("employeeForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const fd = new FormData(e.target);
@@ -121,10 +125,9 @@ document.getElementById("employeeForm").addEventListener("submit", async (e) => 
   e.target.reset();
   clearSignature();
   alert("✅ Empleado registrado correctamente");
-  loadEmployeeList();
 });
 
-// Canvas init
+// ==== CANVAS INICIAL ====
 document.addEventListener("DOMContentLoaded", () => {
   canvas = document.getElementById("signaturePad");
   if (canvas) {
@@ -143,3 +146,64 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.addEventListener("mouseleave", () => isDrawing = false);
   }
 });
+
+// ==== GESTIÓN DE ADMINISTRADORES ====
+document.getElementById("createAdminForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const user = document.getElementById("newAdminUser").value.trim();
+  const pass = document.getElementById("newAdminPass").value.trim();
+
+  if (!user || !pass) return alert("❗ Rellena usuario y contraseña");
+  if (admins[user]) return alert("⚠️ Usuario ya existe");
+
+  admins[user] = pass;
+  localStorage.setItem("aquadama_admins", JSON.stringify(admins));
+  document.getElementById("createAdminForm").reset();
+  renderAdminList();
+  alert("✅ Administrador creado");
+});
+
+function renderAdminList() {
+  const list = document.getElementById("adminList");
+  list.innerHTML = "";
+  for (let user in admins) {
+    const li = document.createElement("li");
+    li.textContent = user;
+    if (user !== DEFAULT_USER) {
+      const del = document.createElement("button");
+      del.textContent = "❌";
+      del.style.marginLeft = "10px";
+      del.onclick = () => {
+        if (confirm(`¿Eliminar al admin '${user}'?`)) {
+          delete admins[user];
+          localStorage.setItem("aquadama_admins", JSON.stringify(admins));
+          renderAdminList();
+        }
+      };
+      li.appendChild(del);
+    }
+    list.appendChild(li);
+  }
+}
+
+document.getElementById("changePassForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const current = document.getElementById("currentPass").value.trim();
+  const newpass = document.getElementById("newPass").value.trim();
+
+  const username = Object.keys(admins).find(
+    user => admins[user] === current
+  );
+
+  if (!username) {
+    alert("❌ Contraseña actual incorrecta");
+    return;
+  }
+
+  admins[username] = newpass;
+  localStorage.setItem("aquadama_admins", JSON.stringify(admins));
+  document.getElementById("changePassForm").reset();
+  alert("✅ Contraseña actualizada correctamente");
+});
+
+renderAdminList();
