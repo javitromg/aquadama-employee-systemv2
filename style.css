@@ -1,105 +1,147 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #eef2f5;
+  background: linear-gradient(to right, #e4f1fb, #ffffff);
   margin: 0;
   padding: 0;
-  color: #222;
+  color: #333;
+  line-height: 1.6;
 }
 
-h1, h2, h3 {
-  color: #1a3f5d;
-}
-
+/* Contenedores */
 .container {
-  max-width: 1000px;
-  margin: 30px auto;
+  max-width: 960px;
+  margin: 2rem auto;
   background: #fff;
-  padding: 30px;
+  padding: 2rem 3rem;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-fieldset {
-  border: 1px solid #ccd;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 8px;
+.login-container {
+  max-width: 400px;
+  margin: 5rem auto;
+  background: #ffffff;
+  padding: 2rem 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
 }
 
-legend {
-  font-weight: bold;
-  color: #2a5d89;
-  padding: 0 10px;
+/* Títulos */
+h1, h2, h3 {
+  color: #1d4e89;
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+h2 {
+  margin-top: 2rem;
+}
+
+/* Formularios */
+form {
+  margin-bottom: 2rem;
 }
 
 label {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 1rem;
+  font-weight: 600;
 }
 
 input[type="text"],
 input[type="email"],
-input[type="tel"],
-input[type="date"],
-input[type="number"],
 input[type="password"],
+input[type="date"],
+input[type="tel"],
+input[type="number"],
 input[type="file"] {
   width: 100%;
-  padding: 8px 10px;
-  margin-top: 4px;
-  border-radius: 5px;
-  border: 1px solid #bbb;
-  box-sizing: border-box;
+  padding: 0.6rem 0.75rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
 }
 
 button {
-  background-color: #2a75bb;
+  display: inline-block;
+  background: #1976d2;
   color: white;
-  padding: 10px 20px;
+  padding: 0.7rem 1.5rem;
+  margin-top: 1rem;
   border: none;
-  border-radius: 5px;
-  font-weight: bold;
+  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 10px;
+  transition: background 0.3s ease;
 }
 
 button:hover {
-  background-color: #1e5b90;
+  background: #155a9c;
 }
 
+/* Fieldsets */
+fieldset {
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background-color: #f9fbfd;
+}
+
+legend {
+  font-weight: 700;
+  color: #2c5282;
+  padding: 0 10px;
+}
+
+/* Firma canvas */
 canvas {
   border: 1px solid #999;
   background-color: #fff;
   display: block;
   margin-bottom: 10px;
+  width: 100%;
+  max-width: 400px;
 }
 
+/* Lista de empleados */
 .employee-card {
-  border: 1px solid #ccc;
-  background: #f6f9fc;
+  border: 1px solid #e2e8f0;
+  background: #f7fafc;
   border-radius: 8px;
-  padding: 15px 20px;
-  margin-bottom: 15px;
+  padding: 1rem;
+  margin-bottom: 1.2rem;
 }
 
 .employee-card h3 {
-  margin-top: 0;
+  margin: 0 0 0.5rem 0;
+  color: #2a4365;
 }
 
+/* Lista de administradores */
+#adminList li {
+  margin-bottom: 0.5rem;
+}
+
+#adminList button {
+  margin-left: 10px;
+  background-color: #e53935;
+}
+
+#adminList button:hover {
+  background-color: #c62828;
+}
+
+/* Secciones ocultas */
 .hidden {
   display: none;
-}
-
-.login-container {
-  max-width: 400px;
-  margin: 100px auto;
-  padding: 30px;
-  background: #ffffff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-}
-
-.login-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
 }
