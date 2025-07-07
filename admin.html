@@ -6,12 +6,28 @@
   <title>Panel de Administración | Aquadama</title>
   <link rel="stylesheet" href="admin.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; }
+    .sidebar { width: 220px; background: #0f4c81; color: white; padding: 20px; }
+    .sidebar h2 { margin-top: 0; }
+    .sidebar ul { list-style: none; padding-left: 0; }
+    .sidebar ul li { margin-bottom: 15px; }
+    .sidebar ul li a { color: white; text-decoration: none; font-weight: bold; cursor: pointer; }
+    .sidebar ul li a:hover { text-decoration: underline; }
+    .main-content { flex: 1; padding: 20px; overflow-y: auto; }
+    .hidden { display: none; }
+    .employee-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 4px; }
+    .employee-card h3 { margin: 0 0 5px 0; }
+    button { margin-right: 5px; cursor: pointer; }
+    form label { display: block; margin-bottom: 10px; }
+    form input { padding: 6px; width: 100%; box-sizing: border-box; }
+  </style>
 </head>
 <body>
   <script>
     if (sessionStorage.getItem("authToken") !== "authenticated") {
       alert("⚠️ Acceso no autorizado. Por favor, inicia sesión.");
-      window.location.href = "index.html";
+      window.location.href = "login.html";
     }
   </script>
 
@@ -57,7 +73,7 @@
 
     document.getElementById("logout").addEventListener("click", () => {
       sessionStorage.removeItem("authToken");
-      location.href = "index.html";
+      location.href = "login.html";
     });
 
     document.getElementById("nav-empleados").addEventListener("click", () => showPanel("panel-empleados"));
@@ -72,14 +88,11 @@
     function loadEmployeeList() {
       const list = document.getElementById("employeeList");
       list.innerHTML = "";
-      
       const employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
-      
       if (employees.length === 0) {
         list.innerHTML = "<p>No hay empleados registrados.</p>";
         return;
       }
-
       employees.forEach((emp, index) => {
         const card = document.createElement("div");
         card.className = "employee-card";
@@ -136,25 +149,22 @@
       document.body.removeChild(a);
     }
 
-    // PDF profesional con diseño y estilo coherente
     function generarPDF(index) {
       const employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
       const emp = employees[index];
       const doc = new jsPDF();
 
-      // Estilos generales
       doc.setFont("helvetica");
       doc.setDrawColor(0);
-      doc.setFillColor(230, 240, 255); // azul suave
+      doc.setFillColor(230, 240, 255);
       doc.setTextColor(40, 40, 40);
-      
-      // Cabecera azul
+
       doc.setFillColor(15, 76, 129);
       doc.rect(0, 0, 210, 20, "F");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(16);
       doc.text("HOJA DE DATOS · Trabajadores/as", 105, 14, null, null, "center");
-      
+
       doc.setTextColor(40, 40, 40);
       doc.setFontSize(10);
       doc.text("Los datos solicitados son los necesarios e inherentes a la relación laboral y su correcto funcionamiento.", 105, 27, null, null, "center");
@@ -173,7 +183,6 @@
         doc.text(text || "-", x, y);
       }
 
-      // Datos
       fieldTitle("Nombre y apellidos:", col1X, y);
       fieldTitle("DNI:", col2X, y);
       y += lineHeight;
@@ -230,7 +239,6 @@
       fieldValue(emp.provincia, col2X, y);
       y += lineHeight + 5;
 
-      // Información bancaria
       doc.setFillColor(230, 240, 255);
       doc.rect(col1X, y, 170, 8, "F");
       doc.setTextColor(15, 76, 129);
@@ -247,7 +255,6 @@
       doc.text("(En España el IBAN consta de 24 posiciones comenzando siempre por ES)", col1X, y);
       y += lineHeight + 5;
 
-      // Contactos de Emergencia
       doc.setFillColor(230, 240, 255);
       doc.rect(col1X, y, 170, 8, "F");
       doc.setTextColor(15, 76, 129);
@@ -265,7 +272,6 @@
       doc.text(`Teléfono: ${emp.telefonoContacto || "-"}`, col1X, y);
       y += lineHeight + 10;
 
-      // Firma y Fecha
       doc.setFillColor(230, 240, 255);
       doc.rect(col1X, y, 170, 28, "F");
       doc.setTextColor(15, 76, 129);
