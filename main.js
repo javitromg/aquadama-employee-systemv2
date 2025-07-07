@@ -55,6 +55,7 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
   const user = document.getElementById("loginUser").value.trim();
   const pass = document.getElementById("loginPass").value.trim();
   if (admins[user] && admins[user] === pass) {
+    sessionStorage.setItem("authToken", "authenticated");
     window.location.href = "admin.html";
   } else {
     alert("❌ Usuario o contraseña incorrectos");
