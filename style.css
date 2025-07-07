@@ -1,0 +1,8 @@
+/* style.css - Estilos principales */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
