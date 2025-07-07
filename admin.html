@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Administración | Aquadama</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Aquadama</h2>
+    <ul>
+      <li><a href="#" id="nav-empleados">📋 Empleados</a></li>
+      <li><a href="#" id="nav-usuarios">👤 Administradores</a></li>
+      <li><a href="#" id="nav-pass">🔒 Cambiar Contraseña</a></li>
+      <li><a href="#" id="logout">🚪 Cerrar Sesión</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <section id="panel-empleados">
+      <h1>Empleados Registrados</h1>
+      <div id="employeeList"></div>
+    </section>
+
+    <section id="panel-usuarios" class="hidden">
+      <h1>Gestión de Administradores</h1>
+      <form id="createAdminForm">
+        <label>Nuevo Usuario:<input type="text" id="newAdminUser" required /></label>
+        <label>Contraseña:<input type="password" id="newAdminPass" required /></label>
+        <button type="submit">Crear Administrador</button>
+      </form>
+      <ul id="adminList"></ul>
+    </section>
+
+    <section id="panel-pass" class="hidden">
+      <h1>Cambiar Contraseña</h1>
+      <form id="changePassForm">
+        <label>Contraseña Actual:<input type="password" id="currentPass" required /></label>
+        <label>Nueva Contraseña:<input type="password" id="newPass" required /></label>
+        <button type="submit">Cambiar</button>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    const admins = JSON.parse(localStorage.getItem("aquadama_admins") || "{}");
+    const employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
+
+    // ==== Logout ====
+    document.getElementById("logout").addEventListener("click", () => {
+      location.href = "index.html";
+    });
+
+    // ==== Navegación ====
+    document.getElementById("nav-empleados").addEventListener("click", () => showPanel("panel-empleados"));
+    document.getElementById("nav-usuarios").addEventListener("click", () => showPanel("panel-usuarios"));
+    document.getElementById("nav-pass").addEventListener("click", () => showPanel("panel-pass"));
+
+    function showPanel(id) {
+      document.querySelectorAll(".main-content section").forEach(sec => sec.classList.add("hidden"));
+      document.getElementById(id).classList.remove("hidden");
+    }
+
+    // ==== Mostrar empleados ====
+    function loadEmployeeList() {
+      const list = document.getElementById("employeeList");
+      list.innerHTML = "";
+
+      if (employees.length === 0) {
+        list.innerHTML = "<p>No hay empleados registrados.</p>";
+        return;
+      }
+
+      employees.forEach((emp, index) => {
+        const card = document.createElement("div");
+        card.className = "employee-card";
+        card.innerHTML = `
+          <h3>${emp.nombre} ${emp.apellidos} (ID: ${emp.id})</h3>
+          <button onclick="toggleDetails(${emp.id})" id="toggle-btn-${emp.id}">🔽 Ver Detalles</button>
+          <button onclick="deleteEmployee(${index})">🗑️ Eliminar</button>
+          <div id="details-${emp.id}" class="hidden">
+            <p><strong>DNI:</strong> ${emp.dni}</p>
+            <p><strong>Fecha Nacimiento:</strong> ${emp.fechaNacimiento}</p>
+            <p><strong>Nacionalidad:</strong> ${emp.nacionalidad}</p>
+            <p><strong>Email:</strong> ${emp.email}</p>
+            <p><strong>Teléfono:</strong> ${emp.telefono}</p>
+            <p><strong>Dirección:</strong> ${emp.direccion}, ${emp.localidad}, ${emp.provincia} (${emp.cp})</p>
+            <p><strong>Centro:</strong> ${emp.centro || '-'}</p>
+            <p><strong>IBAN:</strong> ${emp.iban}</p>
+            <p><strong>SS:</strong> ${emp.ss}</p>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function deleteEmployee(index) {
+      if (confirm("¿Eliminar este empleado?")) {
+        employees.splice(index, 1);
+        localStorage.setItem("aquadama_employees", JSON.stringify(employees));
+        loadEmployeeList();
+      }
+    }
+
+    function toggleDetails(id) {
+      const section = document.getElementById("details-" + id);
+      const btn = document.getElementById("toggle-btn-" + id);
+      const hidden = section.classList.contains("hidden");
+      section.classList.toggle("hidden");
+      btn.textContent = hidden ? "🔼 Ocultar Detalles" : "🔽 Ver Detalles";
+    }
+
+    // ==== Crear nuevo administrador ====
+    document.getElementById("createAdminForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const user = document.getElementById("newAdminUser").value.trim();
+      const pass = document.getElementById("newAdminPass").value.trim();
+      if (!user || !pass) return alert("❗ Rellena usuario y contraseña");
+      if (admins[user]) return alert("⚠️ Usuario ya existe");
+      admins[user] = pass;
+      localStorage.setItem("aquadama_admins", JSON.stringify(admins));
+      renderAdminList();
+      e.target.reset();
+      alert("✅ Administrador creado");
+    });
+
+    // ==== Cambiar contraseña ====
+    document.getElementById("changePassForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const current = document.getElementById("currentPass").value.trim();
+      const newpass = document.getElementById("newPass").value.trim();
+      const user = Object.keys(admins).find(u => admins[u] === current);
+      if (!user) return alert("❌ Contraseña actual incorrecta");
+      admins[user] = newpass;
+      localStorage.setItem("aquadama_admins", JSON.stringify(admins));
+      e.target.reset();
+      alert("✅ Contraseña actualizada");
+    });
+
+    // ==== Lista de administradores ====
+    function renderAdminList() {
+      const list = document.getElementById("adminList");
+      list.innerHTML = "";
+      for (const user in admins) {
+        const li = document.createElement("li");
+        li.textContent = user;
+        if (user !== "javierit") {
+          const del = document.createElement("button");
+          del.textContent = "❌";
+          del.onclick = () => {
+            if (confirm(`¿Eliminar al admin '${user}'?`)) {
+              delete admins[user];
+              localStorage.setItem("aquadama_admins", JSON.stringify(admins));
+              renderAdminList();
+            }
+          };
+          li.appendChild(del);
+        }
+        list.appendChild(li);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      showPanel("panel-empleados");
+      renderAdminList();
+      loadEmployeeList();
+    });
+  </script>
+</body>
+</html>
