@@ -1,5 +1,6 @@
 let employees = JSON.parse(localStorage.getItem('aquadama_employees') || '[]');
 let employeeCounter = parseInt(localStorage.getItem('aquadama_counter') || '0');
+let canvas, ctx, isDrawing = false;
 
 function toBase64(file) {
   return new Promise((resolve, reject) => {
@@ -8,6 +9,16 @@ function toBase64(file) {
     reader.onerror = e => reject(e);
     reader.readAsDataURL(file);
   });
+}
+
+function clearSignature() {
+  if (ctx) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+function getSignatureData() {
+  return canvas.toDataURL();
 }
 
 function saveEmployee(employee) {
@@ -31,7 +42,7 @@ function loadEmployeeList() {
     const card = document.createElement('div');
     card.className = 'employee-card';
     card.innerHTML = `
-      <h3>${emp.nombre} (ID: ${emp.id})</h3>
+      <h3>${emp.nombre.toUpperCase()} (ID: ${emp.id})</h3>
       <button onclick="toggleDetails(${emp.id})" id="toggle-btn-${emp.id}">🔽 Ver Detalles</button>
       <div id="details-${emp.id}" class="hidden">
         <p><strong>DNI:</strong> ${emp.dni}</p>
@@ -42,6 +53,7 @@ function loadEmployeeList() {
           ${emp.fotoDNIDelante ? `<button onclick="downloadFile('${emp.fotoDNIDelante}', 'DNI_Delante_${emp.id}.jpg')">🆔 Descargar DNI Delante</button>` : ''}
           ${emp.fotoDNIDetras ? `<button onclick="downloadFile('${emp.fotoDNIDetras}', 'DNI_Detras_${emp.id}.jpg')">🆔 Descargar DNI Detrás</button>` : ''}
           ${emp.fotoPersonal ? `<button onclick="downloadFile('${emp.fotoPersonal}', 'Foto_${emp.id}.jpg')">📸 Descargar Foto Personal</button>` : ''}
+          ${emp.firma ? `<button onclick="downloadFile('${emp.firma}', 'Firma_${emp.id}.png')">✍️ Descargar Firma</button>` : ''}
         </div>
       </div>
     `;
@@ -68,6 +80,29 @@ function downloadFile(dataUrl, filename) {
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('employeeForm');
+  canvas = document.getElementById('signaturePad');
+  if (canvas) {
+    ctx = canvas.getContext('2d');
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    canvas.addEventListener('mousedown', e => {
+      isDrawing = true;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    });
+    canvas.addEventListener('mousemove', e => {
+      if (!isDrawing) return;
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+    });
+    canvas.addEventListener('mouseup', () => {
+      isDrawing = false;
+    });
+    canvas.addEventListener('mouseleave', () => {
+      isDrawing = false;
+    });
+  }
+
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -81,9 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
       emp.fotoDNIDelante = await toBase64(fd.get('fotoDNIDelante'));
       emp.fotoDNIDetras = await toBase64(fd.get('fotoDNIDetras'));
       emp.fotoPersonal = await toBase64(fd.get('fotoPersonal'));
+      emp.firma = getSignatureData();
 
       saveEmployee(emp);
       form.reset();
+      clearSignature();
       alert('✅ Empleado registrado correctamente');
       loadEmployeeList();
     });
