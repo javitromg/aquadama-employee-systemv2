@@ -28,11 +28,13 @@ function toBase64(file) {
   });
 }
 
+// Registro de empleados
 document.getElementById("employeeForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const fd = new FormData(e.target);
   const emp = {};
   for (let [key, value] of fd.entries()) emp[key] = value;
+
   emp.fotoDNIDelante = await toBase64(fd.get("fotoDNIDelante"));
   emp.fotoDNIDetras = await toBase64(fd.get("fotoDNIDetras"));
   emp.fotoPersonal = await toBase64(fd.get("fotoPersonal"));
@@ -43,11 +45,15 @@ document.getElementById("employeeForm").addEventListener("submit", async (e) => 
   employees.push(emp);
   localStorage.setItem("aquadama_employees", JSON.stringify(employees));
   localStorage.setItem("aquadama_counter", employeeCounter.toString());
+
+  await generarPDF(emp); // Descarga automática
+
   e.target.reset();
   clearSignature();
   alert("✅ Empleado registrado correctamente");
 });
 
+// Login de administrador
 document.getElementById("loginForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const user = document.getElementById("loginUser").value.trim();
@@ -59,6 +65,7 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
   }
 });
 
+// Inicializar firma en canvas
 document.addEventListener("DOMContentLoaded", () => {
   canvas = document.getElementById("signaturePad");
   if (canvas) {
