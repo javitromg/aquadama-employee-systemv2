@@ -10,59 +10,7 @@
   <!-- Formulario público accesible sin login -->
   <div class="container" id="publicFormContainer">
     <h1>Registro de Empleados</h1>
-    <form id="employeeForm">
-      <fieldset>
-        <legend>Datos Personales</legend>
-        <label>Nombre:<input type="text" name="nombre" required /></label>
-        <label>Apellidos:<input type="text" name="apellidos" required /></label>
-        <label>DNI:<input type="text" name="dni" required /></label>
-        <label>Fecha de Nacimiento:<input type="date" name="fechaNacimiento" required /></label>
-        <label>Nacionalidad:<input type="text" name="nacionalidad" required /></label>
-        <label>Estado Civil:<input type="text" name="estadoCivil" /></label>
-        <label>Nº de Hijos:<input type="number" name="hijos" min="0" /></label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Contacto</legend>
-        <label>Teléfono:<input type="tel" name="telefono" required /></label>
-        <label>Email:<input type="email" name="email" required /></label>
-        <label>Dirección:<input type="text" name="direccion" required /></label>
-        <label>Localidad:<input type="text" name="localidad" required /></label>
-        <label>Provincia:<input type="text" name="provincia" required /></label>
-        <label>Código Postal:<input type="text" name="cp" required /></label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Datos Laborales y Bancarios</legend>
-        <label>Formación Académica:<input type="text" name="formacion" /></label>
-        <label>Centro de Trabajo:<input type="text" name="centro" /></label>
-        <label>Seguridad Social:<input type="text" name="ss" required /></label>
-        <label>IBAN:<input type="text" name="iban" required /></label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Contactos de Emergencia</legend>
-        <label>Contacto 1:<input type="text" name="emergencia1" placeholder="Nombre y teléfono" /></label>
-        <label>Contacto 2:<input type="text" name="emergencia2" placeholder="Nombre y teléfono" /></label>
-        <label>Contacto 3:<input type="text" name="emergencia3" placeholder="Nombre y teléfono" /></label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Documentación Adjunta</legend>
-        <label>Foto DNI Delante:<input type="file" name="fotoDNIDelante" accept="image/*" required /></label>
-        <label>Foto DNI Detrás:<input type="file" name="fotoDNIDetras" accept="image/*" required /></label>
-        <label>Foto Personal:<input type="file" name="fotoPersonal" accept="image/*" required /></label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Firma</legend>
-        <p>Firma del empleado:</p>
-        <canvas id="signaturePad" width="400" height="150"></canvas>
-        <button type="button" onclick="clearSignature()">🗑️ Limpiar Firma</button>
-      </fieldset>
-
-      <button type="submit">Registrar Empleado</button>
-    </form>
+    <form id="employeeForm">...</form>
   </div>
 
   <!-- Acceso privado solo para administradores -->
@@ -78,6 +26,26 @@
   <div class="container hidden" id="mainContainer">
     <h1>Panel de Administración</h1>
     <div id="employeeList"></div>
+
+    <hr />
+    <div id="adminUserPanel">
+      <h2>Gestón de Administradores</h2>
+      <form id="createAdminForm">
+        <label>Nuevo Usuario:<input type="text" id="newAdminUser" required /></label>
+        <label>Contraseña:<input type="password" id="newAdminPass" required /></label>
+        <button type="submit">Crear Administrador</button>
+      </form>
+
+      <h3>Lista de Administradores</h3>
+      <ul id="adminList"></ul>
+
+      <h3>Cambiar Contraseña del Administrador</h3>
+      <form id="changePassForm">
+        <label>Contraseña Actual:<input type="password" id="currentPass" required /></label>
+        <label>Nueva Contraseña:<input type="password" id="newPass" required /></label>
+        <button type="submit">Cambiar Contraseña</button>
+      </form>
+    </div>
   </div>
 
   <script src="main.js"></script>
