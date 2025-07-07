@@ -2,115 +2,43 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Registro de Empleados | Aquadama</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    label { display: block; margin-bottom: 8px; }
+    input, button { padding: 6px; font-size: 14px; }
+    canvas { border: 1px solid #000; margin-top: 5px; }
+  </style>
 </head>
 <body>
-  <main>
-    <section class="container" id="publicFormContainer">
-      <h1>Formulario de Registro de Empleados</h1>
-      <form id="employeeForm" autocomplete="off">
-        <fieldset>
-          <legend>Datos Personales</legend>
-          <label>Nombre:<input type="text" name="nombre" required /></label>
-          <label>Apellidos:<input type="text" name="apellidos" required /></label>
-          <label>DNI:<input type="text" name="dni" required /></label>
-          <label>Fecha de Nacimiento:<input type="date" name="fechaNacimiento" required /></label>
-          <label>Nacionalidad:<input type="text" name="nacionalidad" required /></label>
-          <label>Estado Civil:<input type="text" name="estadoCivil" /></label>
-          <label>Nº de Hijos:<input type="number" name="hijos" min="0" /></label>
-        </fieldset>
+  <h1>Registro de Empleados</h1>
+  <form id="employeeForm" enctype="multipart/form-data">
+    <label>Nombre: <input type="text" name="nombre" required /></label>
+    <label>Apellidos: <input type="text" name="apellidos" required /></label>
+    <label>DNI: <input type="text" name="dni" required /></label>
+    <label>Fecha de nacimiento: <input type="date" name="fechaNacimiento" required /></label>
+    <label>Nacionalidad: <input type="text" name="nacionalidad" required /></label>
 
-        <fieldset>
-          <legend>Contacto</legend>
-          <label>Teléfono:<input type="tel" name="telefono" required /></label>
-          <label>Email:<input type="email" name="email" required /></label>
-          <label>Dirección:<input type="text" name="direccion" required /></label>
-          <label>Localidad:<input type="text" name="localidad" required /></label>
-          <label>Provincia:<input type="text" name="provincia" required /></label>
-          <label>Código Postal:<input type="text" name="cp" required /></label>
-        </fieldset>
+    <label>Foto DNI Delante: <input type="file" name="fotoDNIDelante" accept="image/*" required /></label>
+    <label>Foto DNI Detrás: <input type="file" name="fotoDNIDetras" accept="image/*" required /></label>
+    <label>Foto Personal: <input type="file" name="fotoPersonal" accept="image/*" required /></label>
 
-        <fieldset>
-          <legend>Datos Laborales y Bancarios</legend>
-          <label>Formación Académica:<input type="text" name="formacion" /></label>
-          <label>Centro de Trabajo:<input type="text" name="centro" /></label>
-          <label>Seguridad Social:<input type="text" name="ss" required /></label>
-          <label>IBAN:<input type="text" name="iban" required /></label>
-        </fieldset>
+    <label>Firma:</label>
+    <canvas id="signaturePad" width="400" height="150"></canvas><br />
+    <button type="button" id="clearSignature">Limpiar Firma</button>
 
-        <fieldset>
-          <legend>Contactos de Emergencia</legend>
-          <label>Contacto 1:<input type="text" name="emergencia1" /></label>
-          <label>Contacto 2:<input type="text" name="emergencia2" /></label>
-          <label>Contacto 3:<input type="text" name="emergencia3" /></label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Documentación Adjunta</legend>
-          <label>Foto DNI Delante:<input type="file" name="fotoDNIDelante" accept="image/*" required /></label>
-          <label>Foto DNI Detrás:<input type="file" name="fotoDNIDetras" accept="image/*" required /></label>
-          <label>Foto Personal:<input type="file" name="fotoPersonal" accept="image/*" required /></label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Firma del Empleado</legend>
-          <canvas id="signaturePad" width="400" height="150"></canvas>
-          <button type="button" onclick="clearSignature()">🗑️ Limpiar Firma</button>
-        </fieldset>
-
-        <button type="submit">Registrar Empleado</button>
-      </form>
-    </section>
-
-    <section class="login-container" id="loginContainer">
-      <h2>Acceso al Panel de Administración</h2>
-      <form id="loginForm" autocomplete="off">
-        <label>Usuario:<input type="text" id="loginUser" required /></label>
-        <label>Contraseña:<input type="password" id="loginPass" required /></label>
-        <button type="submit">Iniciar Sesión</button>
-      </form>
-    </section>
-  </main>
+    <br /><br />
+    <button type="submit">Registrar Empleado</button>
+  </form>
 
   <script src="main.js"></script>
   <script>
-    async function generarPDF(emp) {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-
-      doc.setFontSize(18);
-      doc.text("Ficha de Registro - Aquadama", 20, 20);
-      doc.setFontSize(12);
-
-      doc.text(`ID: ${emp.id}`, 20, 30);
-      doc.text(`Nombre: ${emp.nombre} ${emp.apellidos}`, 20, 40);
-      doc.text(`DNI: ${emp.dni}`, 20, 50);
-      doc.text(`Fecha de nacimiento: ${emp.fechaNacimiento}`, 20, 60);
-      doc.text(`Email: ${emp.email}`, 20, 70);
-      doc.text(`Teléfono: ${emp.telefono}`, 20, 80);
-      doc.text(`Dirección: ${emp.direccion}, ${emp.localidad}, ${emp.provincia} (${emp.cp})`, 20, 90);
-      doc.text(`Centro: ${emp.centro}`, 20, 100);
-      doc.text(`SS: ${emp.ss}`, 20, 110);
-      doc.text(`IBAN: ${emp.iban}`, 20, 120);
-      doc.text(`Fecha de registro: ${emp.fechaRegistro}`, 20, 130);
-
-      const firma = new Image();
-      firma.src = emp.firma;
-
-      await new Promise(resolve => {
-        firma.onload = () => {
-          doc.text("Firma:", 20, 145);
-          doc.addImage(firma, "PNG", 20, 150, 60, 30);
-          resolve();
-        };
-      });
-
-      doc.save(`Ficha_Empleado_${emp.id}.pdf`);
-    }
+    document.getElementById("clearSignature").addEventListener("click", () => {
+      if (window.ctx && window.canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    });
   </script>
 </body>
 </html>
