@@ -1,13 +1,889 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sistema de Registro de Empleados - Aquadama</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sistema de Registro de Empleados - Aquadama</title>
+
+
+<link href="style.css" rel="stylesheet"/></head>
 <body>
-  <div id="app">Cargando sistema...</div>
-  <script src="main.js"></script>
-</body>
+<div class="container">
+<div class="header">
+<h1>🏢 AQUADAMA</h1>
+<p>Sistema de Registro de Empleados</p>
+</div>
+<div class="nav-buttons">
+<button class="nav-btn active" onclick="showForm()">📝 Nuevo Empleado</button>
+<button class="nav-btn" onclick="showAdmin()">⚙️ Panel de Administración</button>
+</div>
+<!-- FORMULARIO PÚBLICO -->
+<div class="form-container" id="form-section">
+<h2 style="margin-bottom: 30px; color: #2c3e50;">📋 Registro de Nuevo Empleado</h2>
+<form id="employeeForm">
+<div class="form-row">
+<div class="form-group">
+<label for="nombre">Nombre y Apellidos *</label>
+<input id="nombre" name="nombre" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="dni">DNI *</label>
+<input id="dni" name="dni" required="" type="text"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="segSocial">Nº Seguridad Social *</label>
+<input id="segSocial" name="segSocial" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="nacionalidad">Nacionalidad *</label>
+<input id="nacionalidad" name="nacionalidad" required="" type="text" value="España"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="sexo">Sexo *</label>
+<select id="sexo" name="sexo" required="">
+<option value="">Seleccionar</option>
+<option value="HOMBRE">Hombre</option>
+<option value="MUJER">Mujer</option>
+</select>
+</div>
+<div class="form-group">
+<label for="fechaNacimiento">Fecha de Nacimiento *</label>
+<input id="fechaNacimiento" name="fechaNacimiento" required="" type="date"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="lugarNacimiento">Lugar de Nacimiento *</label>
+<input id="lugarNacimiento" name="lugarNacimiento" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="estadoCivil">Estado Civil *</label>
+<select id="estadoCivil" name="estadoCivil" required="">
+<option value="">Seleccionar</option>
+<option value="SOLTER@">Soltero/a</option>
+<option value="CASAD@">Casado/a</option>
+<option value="DIVORCIAD@">Divorciado/a</option>
+<option value="VIUD@">Viudo/a</option>
+</select>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="numeroHijos">Número de Hijos</label>
+<input id="numeroHijos" min="0" name="numeroHijos" type="number" value="0"/>
+</div>
+<div class="form-group">
+<label for="telefono">Teléfono *</label>
+<input id="telefono" name="telefono" required="" type="tel"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="email">Email *</label>
+<input id="email" name="email" required="" type="email"/>
+</div>
+<div class="form-group">
+<label for="formacion">Formación Oficial</label>
+<input id="formacion" name="formacion" type="text"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="direccion">Dirección *</label>
+<input id="direccion" name="direccion" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="codigoPostal">Código Postal *</label>
+<input id="codigoPostal" name="codigoPostal" required="" type="text"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="poblacion">Población *</label>
+<input id="poblacion" name="poblacion" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="provincia">Provincia *</label>
+<input id="provincia" name="provincia" required="" type="text"/>
+</div>
+</div>
+<div class="form-row full">
+<div class="form-group">
+<label for="iban">Número de cuenta - IBAN *</label>
+<input id="iban" name="iban" placeholder="ES1234567890123456789012" required="" type="text"/>
+</div>
+</div>
+<h3 style="margin: 30px 0 20px 0; color: #2c3e50;">👥 Contactos de Emergencia</h3>
+<div class="contact-section">
+<h4>Contacto 1</h4>
+<div class="form-row triple">
+<div class="form-group">
+<label for="contacto1Nombre">Nombre</label>
+<input id="contacto1Nombre" name="contacto1Nombre" type="text"/>
+</div>
+<div class="form-group">
+<label for="contacto1Parentesco">Parentesco</label>
+<input id="contacto1Parentesco" name="contacto1Parentesco" type="text"/>
+</div>
+<div class="form-group">
+<label for="contacto1Telefono">Teléfono</label>
+<input id="contacto1Telefono" name="contacto1Telefono" type="tel"/>
+</div>
+</div>
+</div>
+<div class="contact-section">
+<h4>Contacto 2</h4>
+<div class="form-row triple">
+<div class="form-group">
+<label for="contacto2Nombre">Nombre</label>
+<input id="contacto2Nombre" name="contacto2Nombre" type="text"/>
+</div>
+<div class="form-group">
+<label for="contacto2Parentesco">Parentesco</label>
+<input id="contacto2Parentesco" name="contacto2Parentesco" type="text"/>
+</div>
+<div class="form-group">
+<label for="contacto2Telefono">Teléfono</label>
+<input id="contacto2Telefono" name="contacto2Telefono" type="tel"/>
+</div>
+</div>
+</div>
+<div class="contact-section">
+<h4>Contacto 3</h4>
+<div class="form-row triple">
+<div class="form-group">
+<label for="contacto3Nombre">Nombre</label>
+<input id="contacto3Nombre" name="contacto3Nombre" type="text"/>
+</div>
+<div class="form-group">
+<label for="contacto3Parentesco">Parentesco</label>
+<input id="contacto3Parentesco" name="contacto3Parentesco" type="text"/>
+</div>
+<div class="form-group">
+<label for="contacto3Telefono">Teléfono</label>
+<input id="contacto3Telefono" name="contacto3Telefono" type="tel"/>
+</div>
+</div>
+</div>
+<h3 style="margin: 30px 0 20px 0; color: #2c3e50;">📷 Documentos Fotográficos</h3>
+<div class="form-row">
+<div class="form-group">
+<label for="fotoDNIDelante">Foto DNI (Delante) *</label>
+<div class="file-upload">
+<input accept="image/*" id="fotoDNIDelante" name="fotoDNIDelante" required="" type="file"/>
+<label class="file-upload-label" for="fotoDNIDelante">
+                                📄 Subir foto del DNI (delante)
+                            </label>
+</div>
+<div class="file-preview" id="previewDNIDelante"></div>
+</div>
+<div class="form-group">
+<label for="fotoDNIDetras">Foto DNI (Detrás) *</label>
+<div class="file-upload">
+<input accept="image/*" id="fotoDNIDetras" name="fotoDNIDetras" required="" type="file"/>
+<label class="file-upload-label" for="fotoDNIDetras">
+                                📄 Subir foto del DNI (detrás)
+                            </label>
+</div>
+<div class="file-preview" id="previewDNIDetras"></div>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="fotoPersonal">Foto Personal (fondo liso) *</label>
+<div class="file-upload">
+<input accept="image/*" id="fotoPersonal" name="fotoPersonal" required="" type="file"/>
+<label class="file-upload-label" for="fotoPersonal">
+                                📸 Subir foto personal
+                            </label>
+</div>
+<div class="file-preview" id="previewPersonal"></div>
+</div>
+</div>
+<h3 style="margin: 30px 0 20px 0; color: #2c3e50;">✍️ Firma Digital</h3>
+<div class="form-row full">
+<div class="form-group">
+<label>Firma del Empleado *</label>
+<div class="signature-container">
+<p>Firme con su dedo o mouse en el área de abajo:</p>
+<canvas class="signature-pad" height="200" id="signaturePad" width="400"></canvas>
+<div class="signature-controls">
+<button class="btn-clear" onclick="clearSignature()" type="button">🗑️ Limpiar</button>
+</div>
+</div>
+</div>
+</div>
+<div style="text-align: center; margin-top: 40px;">
+<button class="submit-btn" type="submit">✅ Registrar Empleado</button>
+</div>
+</form>
+</div>
+<!-- PANEL DE ADMINISTRACIÓN -->
+<div class="admin-container hidden" id="admin-section">
+<div id="admin-login">
+<div class="login-form">
+<h2>🔐 Acceso de Administrador</h2>
+<div class="error-message hidden" id="login-error">Usuario o contraseña incorrectos</div>
+<form id="loginForm">
+<div class="form-group">
+<label for="username">Usuario</label>
+<input id="username" name="username" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="password">Contraseña</label>
+<input id="password" name="password" required="" type="password"/>
+</div>
+<button class="submit-btn" type="submit">Iniciar Sesión</button>
+</form>
+</div>
+</div>
+<div class="hidden" id="admin-panel">
+<button class="logout-btn" onclick="logout()">🚪 Cerrar Sesión</button>
+<h2 style="margin-bottom: 30px; color: #2c3e50; clear: both;">⚙️ Panel de Administración</h2>
+<div class="admin-tabs">
+<button class="admin-tab active" onclick="showAdminTab('employees')">👥 Empleados</button>
+<button class="admin-tab" onclick="showAdminTab('users')">🔧 Gestión de Usuarios</button>
+<button class="admin-tab" onclick="showAdminTab('settings')">⚙️ Configuración</button>
+</div>
+<div id="employees-section">
+<p style="color: #7f8c8d; margin-bottom: 20px;">Gestiona todos los empleados registrados</p>
+<div id="employeeList"></div>
+</div>
+<div class="hidden" id="users-section">
+<div class="user-management">
+<h3>Crear Nuevo Usuario Administrador</h3>
+<form id="newUserForm">
+<div class="form-row">
+<div class="form-group">
+<label for="newUsername">Usuario</label>
+<input id="newUsername" name="newUsername" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="newPassword">Contraseña</label>
+<input id="newPassword" name="newPassword" required="" type="password"/>
+</div>
+</div>
+<button class="btn-primary" type="submit">➕ Crear Usuario</button>
+</form>
+</div>
+<div class="user-management">
+<h3>Usuarios Administradores</h3>
+<div id="usersList"></div>
+</div>
+</div>
+<div class="hidden" id="settings-section">
+<div class="user-management">
+<h3>Cambiar Mi Contraseña</h3>
+<form id="changePasswordForm">
+<div class="form-row">
+<div class="form-group">
+<label for="currentPassword">Contraseña Actual</label>
+<input id="currentPassword" name="currentPassword" required="" type="password"/>
+</div>
+<div class="form-group">
+<label for="newPasswordChange">Nueva Contraseña</label>
+<input id="newPasswordChange" name="newPasswordChange" required="" type="password"/>
+</div>
+</div>
+<button class="btn-primary" type="submit">🔄 Cambiar Contraseña</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+// Variables globales
+var employees = JSON.parse(localStorage.getItem('aquadama_employees') || '[]');
+var employeeCounter = parseInt(localStorage.getItem('aquadama_counter') || '0');
+var users = JSON.parse(localStorage.getItem('aquadama_users') || '[]');
+var currentUser = null;
+var isDrawing = false;
+var canvas, ctx;
+
+// Inicializar usuarios
+if (users.length === 0) {
+    users.push({
+        id: 1,
+        username: 'javierit',
+        password: 'Ab915712@',
+        createdAt: new Date().toLocaleDateString('es-ES')
+    });
+    localStorage.setItem('aquadama_users', JSON.stringify(users));
+}
+
+// FUNCIONES GLOBALES
+function showForm() {
+    document.getElementById('form-section').classList.remove('hidden');
+    document.getElementById('admin-section').classList.add('hidden');
+    document.querySelectorAll('.nav-btn')[0].classList.add('active');
+    document.querySelectorAll('.nav-btn')[1].classList.remove('active');
+}
+
+function showAdmin() {
+    document.getElementById('form-section').classList.add('hidden');
+    document.getElementById('admin-section').classList.remove('hidden');
+    document.querySelectorAll('.nav-btn')[0].classList.remove('active');
+    document.querySelectorAll('.nav-btn')[1].classList.add('active');
+
+    if (currentUser) {
+        document.getElementById('admin-login').classList.add('hidden');
+        document.getElementById('admin-panel').classList.remove('hidden');
+        loadEmployeeList();
+        loadUsersList();
+    } else {
+        document.getElementById('admin-login').classList.remove('hidden');
+        document.getElementById('admin-panel').classList.add('hidden');
+    }
+}
+
+function showAdminTab(tab) {
+    document.getElementById('employees-section').classList.add('hidden');
+    document.getElementById('users-section').classList.add('hidden');
+    document.getElementById('settings-section').classList.add('hidden');
+    document.getElementById(tab + '-section').classList.remove('hidden');
+    
+    document.querySelectorAll('.admin-tab').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+}
+
+function clearSignature() {
+    if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+}
+
+function logout() {
+    currentUser = null;
+    document.getElementById('admin-login').classList.remove('hidden');
+    document.getElementById('admin-panel').classList.add('hidden');
+    document.getElementById('loginForm').reset();
+    document.getElementById('login-error').classList.add('hidden');
+}
+
+function deleteEmployee(id) {
+    if (confirm('¿Estás seguro de que quieres eliminar este empleado?')) {
+        employees = employees.filter(function(emp) { return emp.id !== id; });
+        localStorage.setItem('aquadama_employees', JSON.stringify(employees));
+        loadEmployeeList();
+    }
+}
+
+function downloadImage(employeeId, imageType, imageName) {
+    var employee = employees.find(function(emp) { return emp.id == employeeId; });
+    if (!employee || !employee[imageType]) {
+        alert('Imagen no disponible');
+        return;
+    }
+    
+    // Crear enlace de descarga
+    var link = document.createElement('a');
+    link.href = employee[imageType];
+    link.download = employee.nombre ? 
+        employee.nombre.replace(/\s+/g, '_') + '_' + imageName + '.jpg' : 
+        'Empleado_ID_' + employeeId + '_' + imageName + '.jpg';
+    
+    // Simular clic para descargar
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function downloadSignature(employeeId) {
+    var employee = employees.find(function(emp) { return emp.id == employeeId; });
+    if (!employee || !employee.firma) {
+        alert('Firma no disponible');
+        return;
+    }
+    
+    // Crear enlace de descarga
+    var link = document.createElement('a');
+    link.href = employee.firma;
+    link.download = employee.nombre ? 
+        employee.nombre.replace(/\s+/g, '_') + '_Firma.png' : 
+        'Empleado_ID_' + employeeId + '_Firma.png';
+    
+    // Simular clic para descargar
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function deleteUser(id) {
+    if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+        users = users.filter(function(user) { return user.id !== id; });
+        localStorage.setItem('aquadama_users', JSON.stringify(users));
+        loadUsersList();
+    }
+}
+
+function downloadPDF(employeeId) {
+    var employee = employees.find(function(emp) { return emp.id === employeeId; });
+    if (!employee) return;
+
+    var doc = new window.jspdf.jsPDF();
+    doc.text('C/ Ingenios Azucareros, Nº 11. Pol. San Jerónimo · 38312 La Orotava', 20, 30);
+    doc.text('Copyright © 2025 AQUADAMA', 20, 40);
+    
+    doc.setFontSize(14);
+    doc.text('HOJA DE DATOS · Trabajadores/as', 20, 60);
+    doc.setFontSize(10);
+    doc.text('Los datos solicitados son necesarios e inherentes a la relación laboral.', 20, 70);
+    
+    var y = 90;
+    function addField(label, value) {
+        doc.text(label + ': ' + (value || 'N/A'), 20, y);
+        y += 8;
+    }
+    
+    addField('Nombre y apellidos', employee.nombre);
+    addField('DNI', employee.dni);
+    addField('Teléfono/s', employee.telefono);
+    addField('Email', employee.email);
+    addField('Población', employee.poblacion);
+    addField('Provincia', employee.provincia);
+    
+    doc.save('Empleado_' + (employee.nombre || 'sin_nombre').replace(/\s+/g, '_') + '.pdf');
+}
+
+function getSignatureData() {
+    return canvas.toDataURL();
+}
+
+function setupFilePreview(inputId, previewId) {
+    var input = document.getElementById(inputId);
+    var preview = document.getElementById(previewId);
+    
+    input.addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview"><span>✅ ' + file.name + '</span>';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+function saveEmployee(employeeData) {
+    employeeData.firma = getSignatureData();
+    employeeData.id = ++employeeCounter;
+    employeeData.fechaRegistro = new Date().toLocaleDateString('es-ES');
+    
+    employees.push(employeeData);
+    localStorage.setItem('aquadama_employees', JSON.stringify(employees));
+    localStorage.setItem('aquadama_counter', employeeCounter.toString());
+    
+    // MENSAJE DE ÉXITO MEJORADO
+    var successMessage = document.createElement('div');
+    successMessage.className = 'success-message';
+    successMessage.style.cssText = `
+        background: #d4edda;
+        color: #155724;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        border: 2px solid #c3e6cb;
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        animation: slideDown 0.5s ease-out;
+    `;
+    successMessage.innerHTML = '✅ Su formulario ha sido enviado correctamente.';
+    
+    // Insertar el mensaje al principio del formulario
+    var formSection = document.getElementById('form-section');
+    var formTitle = formSection.querySelector('h2');
+    formSection.insertBefore(successMessage, formTitle.nextSibling);
+    
+    // Limpiar formulario
+    document.getElementById('employeeForm').reset();
+    clearSignature();
+    document.querySelectorAll('.file-preview').forEach(function(preview) {
+        preview.innerHTML = '';
+    });
+    
+    // Scroll suave hacia arriba para ver el mensaje
+    formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    // Quitar mensaje después de 5 segundos con animación
+    setTimeout(function() {
+        successMessage.style.cssText += `
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s ease-out;
+        `;
+        setTimeout(function() {
+            if (successMessage.parentNode) {
+                successMessage.remove();
+            }
+        }, 500);
+    }, 5000);
+}
+
+function loadEmployeeList() {
+    var employeeList = document.getElementById('employeeList');
+    
+    if (employees.length === 0) {
+        employeeList.innerHTML = '<p style="text-align: center; color: #7f8c8d; font-size: 18px; padding: 40px;">No hay empleados registrados</p>';
+        return;
+    }
+    
+    employeeList.innerHTML = employees.map(function(employee) {
+        // Procesar contactos de emergencia
+        var contactosHTML = '';
+        var contactos = [];
+        
+        if (employee.contacto1Nombre) {
+            contactos.push({
+                numero: 1,
+                nombre: employee.contacto1Nombre || 'N/A',
+                parentesco: employee.contacto1Parentesco || 'N/A',
+                telefono: employee.contacto1Telefono || 'N/A'
+            });
+        }
+        if (employee.contacto2Nombre) {
+            contactos.push({
+                numero: 2,
+                nombre: employee.contacto2Nombre || 'N/A',
+                parentesco: employee.contacto2Parentesco || 'N/A',
+                telefono: employee.contacto2Telefono || 'N/A'
+            });
+        }
+        if (employee.contacto3Nombre) {
+            contactos.push({
+                numero: 3,
+                nombre: employee.contacto3Nombre || 'N/A',
+                parentesco: employee.contacto3Parentesco || 'N/A',
+                telefono: employee.contacto3Telefono || 'N/A'
+            });
+        }
+        
+        if (contactos.length > 0) {
+            contactos.forEach(function(contacto) {
+                contactosHTML += `
+                    <div style="background: #f1f3f4; padding: 8px; margin: 4px 0; border-radius: 5px; border-left: 3px solid #3498db;">
+                        <strong>Contacto ${contacto.numero}:</strong> ${contacto.nombre} | 
+                        <em>${contacto.parentesco}</em> | 
+                        📞 ${contacto.telefono}
+                    </div>
+                `;
+            });
+        } else {
+            contactosHTML = '<span style="color: #999; font-style: italic;">No hay contactos de emergencia registrados</span>';
+        }
+        
+        // Generar botones de descarga de archivos
+        var archivosHTML = '';
+        var archivos = [
+            { key: 'fotoDNIDelante', nombre: 'DNI Delante', icono: '🆔' },
+            { key: 'fotoDNIDetras', nombre: 'DNI Detrás', icono: '🆔' },
+            { key: 'fotoPersonal', nombre: 'Foto Personal', icono: '📸' }
+        ];
+        
+        archivos.forEach(function(archivo) {
+            if (employee[archivo.key]) {
+                archivosHTML += `
+                    <button class="btn-download" onclick="downloadImage('${employee.id}', '${archivo.key}', '${archivo.nombre}')" 
+                            style="margin: 2px; padding: 6px 10px; font-size: 12px;">
+                        ${archivo.icono} ${archivo.nombre}
+                    </button>
+                `;
+            } else {
+                archivosHTML += `
+                    <span style="color: #999; font-size: 12px; margin: 2px 8px; display: inline-block;">
+                        ${archivo.icono} ${archivo.nombre}: No disponible
+                    </span>
+                `;
+            }
+        });
+        
+        return `
+            <div class="employee-card" style="margin-bottom: 25px; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden;">
+                
+                <!-- CABECERA DEL EMPLEADO -->
+                <div style="background: linear-gradient(135deg, #3498db, #2c3e50); color: white; padding: 20px;">
+                    <h3 style="margin: 0; font-size: 20px; display: flex; align-items: center;">
+                        👤 ${employee.nombre || 'Sin nombre'} 
+                        <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 15px; font-size: 12px; margin-left: 10px;">
+                            ID: ${employee.id}
+                        </span>
+                    </h3>
+                    <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">
+                        📅 Registrado: ${employee.fechaRegistro || 'N/A'}
+                    </p>
+                </div>
+                
+                <!-- CONTENIDO PRINCIPAL -->
+                <div style="padding: 20px;">
+                    
+                    <!-- DATOS PERSONALES -->
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 12px; font-size: 16px; border-bottom: 2px solid #3498db; padding-bottom: 5px;">
+                            📋 Datos Personales
+                        </h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; font-size: 14px;">
+                            <div><strong>DNI:</strong> ${employee.dni || 'N/A'}</div>
+                            <div><strong>Nacionalidad:</strong> ${employee.nacionalidad || 'N/A'}</div>
+                            <div><strong>Sexo:</strong> ${employee.sexo || 'N/A'}</div>
+                            <div><strong>Fecha nacimiento:</strong> ${employee.fechaNacimiento || 'N/A'}</div>
+                            <div><strong>Lugar nacimiento:</strong> ${employee.lugarNacimiento || 'N/A'}</div>
+                            <div><strong>Estado civil:</strong> ${employee.estadoCivil || 'N/A'}</div>
+                            <div><strong>Número de hijos:</strong> ${employee.numeroHijos || '0'}</div>
+                            <div><strong>Nº Seg. Social:</strong> ${employee.segSocial || 'N/A'}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- CONTACTO -->
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 12px; font-size: 16px; border-bottom: 2px solid #27ae60; padding-bottom: 5px;">
+                            📞 Información de Contacto
+                        </h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; font-size: 14px;">
+                            <div><strong>Teléfono:</strong> ${employee.telefono || 'N/A'}</div>
+                            <div><strong>Email:</strong> ${employee.email || 'N/A'}</div>
+                            <div><strong>Formación:</strong> ${employee.formacion || 'N/A'}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- DIRECCIÓN -->
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 12px; font-size: 16px; border-bottom: 2px solid #e74c3c; padding-bottom: 5px;">
+                            🏠 Dirección
+                        </h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 14px;">
+                            <div style="grid-column: span 2;"><strong>Dirección:</strong> ${employee.direccion || 'N/A'}</div>
+                            <div><strong>Código Postal:</strong> ${employee.codigoPostal || 'N/A'}</div>
+                            <div><strong>Población:</strong> ${employee.poblacion || 'N/A'}</div>
+                            <div><strong>Provincia:</strong> ${employee.provincia || 'N/A'}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- INFORMACIÓN BANCARIA -->
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 12px; font-size: 16px; border-bottom: 2px solid #f39c12; padding-bottom: 5px;">
+                            💳 Información Bancaria
+                        </h4>
+                        <div style="font-size: 14px;">
+                            <strong>IBAN:</strong> ${employee.iban || 'N/A'}
+                        </div>
+                    </div>
+                    
+                    <!-- CONTACTOS DE EMERGENCIA -->
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 12px; font-size: 16px; border-bottom: 2px solid #9b59b6; padding-bottom: 5px;">
+                            🚨 Contactos de Emergencia
+                        </h4>
+                        <div style="font-size: 14px;">
+                            ${contactosHTML}
+                        </div>
+                    </div>
+                    
+                    <!-- ARCHIVOS ADJUNTOS -->
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 12px; font-size: 16px; border-bottom: 2px solid #1abc9c; padding-bottom: 5px;">
+                            📎 Archivos Adjuntos
+                        </h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                            ${archivosHTML}
+                        </div>
+                    </div>
+                    
+                    <!-- FIRMA -->
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2c3e50; margin-bottom: 12px; font-size: 16px; border-bottom: 2px solid #34495e; padding-bottom: 5px;">
+                            ✍️ Firma Digital
+                        </h4>
+                        <div style="font-size: 14px;">
+                            ${employee.firma ? 
+                                '<span style="color: #27ae60;">✅ Firma digital capturada</span> <button class="btn-download" onclick="downloadSignature(\'' + employee.id + '\')" style="margin-left: 10px; padding: 4px 8px; font-size: 12px;">📥 Descargar Firma</button>' : 
+                                '<span style="color: #e74c3c;">❌ Sin firma digital</span>'
+                            }
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <!-- ACCIONES -->
+                <div style="background: #f8f9fa; padding: 15px; border-top: 1px solid #dee2e6;">
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <button class="btn-download" onclick="downloadPDF(${employee.id})" 
+                                style="background: #3498db; padding: 10px 20px; font-size: 14px;">
+                            📄 Descargar PDF Completo
+                        </button>
+                        <button class="btn-delete" onclick="deleteEmployee(${employee.id})" 
+                                style="background: #e74c3c; padding: 10px 20px; font-size: 14px;">
+                            🗑️ Eliminar Empleado
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+        `;
+    }).join('');
+}
+
+function loadUsersList() {
+    var usersList = document.getElementById('usersList');
+    
+    usersList.innerHTML = users.map(function(user) {
+        return '<div class="user-card">' +
+            '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                '<div>' +
+                    '<strong>👤 ' + user.username + '</strong>' +
+                    '<br><small>Creado: ' + user.createdAt + '</small>' +
+                '</div>' +
+                '<div>' +
+                    (user.id !== currentUser.id ? 
+                        '<button class="btn-delete" onclick="deleteUser(' + user.id + ')">🗑️ Eliminar</button>' : 
+                        '<span style="color: #7f8c8d;">Usuario actual</span>'
+                    ) +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    }).join('');
+}
+
+// INICIALIZACIÓN
+document.addEventListener('DOMContentLoaded', function() {
+    canvas = document.getElementById('signaturePad');
+    ctx = canvas.getContext('2d');
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    
+    canvas.addEventListener('mousedown', function(e) {
+        isDrawing = true;
+        var rect = canvas.getBoundingClientRect();
+        ctx.beginPath();
+        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    });
+    
+    canvas.addEventListener('mousemove', function(e) {
+        if (!isDrawing) return;
+        var rect = canvas.getBoundingClientRect();
+        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.stroke();
+    });
+    
+    canvas.addEventListener('mouseup', function() {
+        isDrawing = false;
+    });
+    
+    canvas.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        var touch = e.touches[0];
+        var mouseEvent = new MouseEvent('mousedown', {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+    });
+    
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        var touch = e.touches[0];
+        var mouseEvent = new MouseEvent('mousemove', {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+    });
+    
+    canvas.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        isDrawing = false;
+    });
+    
+    setupFilePreview('fotoDNIDelante', 'previewDNIDelante');
+    setupFilePreview('fotoDNIDetras', 'previewDNIDetras');
+    setupFilePreview('fotoPersonal', 'previewPersonal');
+    
+    document.getElementById('employeeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData(e.target);
+        var employeeData = {};
+        
+        for (var pair of formData.entries()) {
+            employeeData[pair[0]] = pair[1];
+        }
+        
+        saveEmployee(employeeData);
+    });
+    
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        
+        var user = users.find(function(u) {
+            return u.username === username && u.password === password;
+        });
+        
+        if (user) {
+            currentUser = user;
+            document.getElementById('admin-login').classList.add('hidden');
+            document.getElementById('admin-panel').classList.remove('hidden');
+            document.getElementById('login-error').classList.add('hidden');
+            this.reset();
+            loadEmployeeList();
+            loadUsersList();
+        } else {
+            document.getElementById('login-error').classList.remove('hidden');
+        }
+    });
+    
+    document.getElementById('newUserForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var username = document.getElementById('newUsername').value;
+        var password = document.getElementById('newPassword').value;
+        
+        if (users.find(function(u) { return u.username === username; })) {
+            alert('Este usuario ya existe');
+            return;
+        }
+        
+        var newUser = {
+            id: users.length + 1,
+            username: username,
+            password: password,
+            createdAt: new Date().toLocaleDateString('es-ES')
+        };
+        
+        users.push(newUser);
+        localStorage.setItem('aquadama_users', JSON.stringify(users));
+        this.reset();
+        loadUsersList();
+        alert('Usuario creado exitosamente');
+    });
+    
+    document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var currentPassword = document.getElementById('currentPassword').value;
+        var newPassword = document.getElementById('newPasswordChange').value;
+        
+        if (currentUser.password !== currentPassword) {
+            alert('La contraseña actual es incorrecta');
+            return;
+        }
+        
+        currentUser.password = newPassword;
+        var userIndex = users.findIndex(function(u) { return u.id === currentUser.id; });
+        users[userIndex] = currentUser;
+        localStorage.setItem('aquadama_users', JSON.stringify(users));
+        this.reset();
+        alert('Contraseña cambiada exitosamente');
+    });
+});
+</script>
+<script src="main.js"></script></body>
 </html>
