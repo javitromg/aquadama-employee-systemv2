@@ -5,8 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel de Administración | Aquadama</title>
   <link rel="stylesheet" href="admin.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+  <script>
+    if (sessionStorage.getItem("authToken") !== "authenticated") {
+      alert("⚠️ Acceso no autorizado. Por favor, inicia sesión.");
+      window.location.href = "index.html";
+    }
+  </script>
+
   <div class="sidebar">
     <h2>Aquadama</h2>
     <ul>
@@ -46,8 +54,12 @@
   <script>
     const admins = JSON.parse(localStorage.getItem("aquadama_admins") || "{}");
     const employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
+    const { jsPDF } = window.jspdf;
 
-    document.getElementById("logout").addEventListener("click", () => location.href = "index.html");
+    document.getElementById("logout").addEventListener("click", () => {
+      sessionStorage.removeItem("authToken");
+      location.href = "index.html";
+    });
 
     document.getElementById("nav-empleados").addEventListener("click", () => showPanel("panel-empleados"));
     document.getElementById("nav-usuarios").addEventListener("click", () => showPanel("panel-usuarios"));
@@ -74,7 +86,8 @@
           <h3>${emp.nombre} ${emp.apellidos} (ID: ${emp.id})</h3>
           <button onclick="toggleDetails(${emp.id})" id="toggle-btn-${emp.id}">🔽 Ver Detalles</button>
           <button onclick="deleteEmployee(${index})">🗑️ Eliminar</button>
-          <div id="details-${emp.id}" class="hidden">
+          <button onclick="generarPDF(${index})">📄 Generar PDF</button>
+          <div id="details-${emp.id}" class="hidden" style="margin-top:10px;">
             <p><strong>DNI:</strong> ${emp.dni}</p>
             <p><strong>Fecha Nacimiento:</strong> ${emp.fechaNacimiento}</p>
             <p><strong>Nacionalidad:</strong> ${emp.nacionalidad}</p>
@@ -121,6 +134,126 @@
       document.body.removeChild(a);
     }
 
+    // PDF generation function adapted to your last request (detailed design) here:
+    function generarPDF(index) {
+      const emp = employees[index];
+      const doc = new jsPDF();
+
+      doc.setFontSize(16);
+      doc.text("HOJA DE DATOS · Trabajadores/as", 105, 15, null, null, "center");
+      doc.setFontSize(10);
+      doc.text("Los datos solicitados son los necesarios e inherentes a la relación laboral y su correcto funcionamiento.", 105, 25, null, null, "center");
+
+      const startY = 35;
+      const lineHeight = 8;
+      const col1X = 20;
+      const col2X = 110;
+
+      doc.setFont(undefined, "bold");
+      doc.text("Nombre y apellidos:", col1X, startY);
+      doc.text("DNI:", col2X, startY);
+      doc.setFont(undefined, "normal");
+      doc.text(`${emp.nombre} ${emp.apellidos}`, col1X, startY + lineHeight);
+      doc.text(emp.dni, col2X, startY + lineHeight);
+
+      doc.setFont(undefined, "bold");
+      doc.text("Número Seg. Social:", col1X, startY + 2 * lineHeight);
+      doc.text("Nacionalidad:", col2X, startY + 2 * lineHeight);
+      doc.setFont(undefined, "normal");
+      doc.text(emp.ss, col1X, startY + 3 * lineHeight);
+      doc.text(emp.nacionalidad, col2X, startY + 3 * lineHeight);
+
+      doc.setFont(undefined, "bold");
+      doc.text("Sexo:", col1X, startY + 4 * lineHeight);
+      doc.text("Fecha de nacimiento:", col2X, startY + 4 * lineHeight);
+      doc.setFont(undefined, "normal");
+      doc.text("", col1X, startY + 5 * lineHeight); // Sexo no capturado en formulario
+      doc.text(emp.fechaNacimiento, col2X, startY + 5 * lineHeight);
+
+      doc.setFont(undefined, "bold");
+      doc.text("Lugar:", col1X, startY + 6 * lineHeight);
+      doc.text("Estado civil:", col2X, startY + 6 * lineHeight);
+      doc.setFont(undefined, "normal");
+      doc.text("", col1X, startY + 7 * lineHeight); // Lugar no capturado
+      doc.text(emp.estadoCivil || "", col2X, startY + 7 * lineHeight);
+
+      doc.setFont(undefined, "bold");
+      doc.text("Número de hijos:", col1X, startY + 8 * lineHeight);
+      doc.text("Teléfono/s:", col2X, startY + 8 * lineHeight);
+      doc.setFont(undefined, "normal");
+      doc.text(emp.hijos || "", col1X, startY + 9 * lineHeight);
+      doc.text(emp.telefono, col2X, startY + 9 * lineHeight);
+
+      doc.setFont(undefined, "bold");
+      doc.text("Email:", col1X, startY + 10 * lineHeight);
+      doc.text("Formación Oficial:", col2X, startY + 10 * lineHeight);
+      doc.setFont(undefined, "normal");
+      doc.text(emp.email, col1X, startY + 11 * lineHeight);
+      doc.text(emp.formacion || "", col2X, startY + 11 * lineHeight);
+
+      doc.setFont(undefined, "bold");
+      doc.text("Dirección:", col1X, startY + 12 * lineHeight);
+      doc.text("Código postal:", col2X, startY + 12 * lineHeight);
+      doc.setFont(undefined, "normal");
+      doc.text(emp.direccion, col1X, startY + 13 * lineHeight);
+      doc.text(emp.cp, col2X, startY + 13 * lineHeight);
+
+      doc.setFont(undefined, "bold");
+      doc.text("Población:", col1X, startY + 14 * lineHeight);
+      doc.text("Provincia:", col2X, startY + 14 * lineHeight);
+      doc.setFont(undefined, "normal");
+      doc.text(emp.localidad, col1X, startY + 15 * lineHeight);
+      doc.text(emp.provincia, col2X, startY + 15 * lineHeight);
+
+      doc.setFont(undefined, "bold");
+      doc.text("Información Bancaria", col1X, startY + 17 * lineHeight);
+      doc.setFont(undefined, "normal");
+      doc.text(`Número de cuenta - IBAN: ${emp.iban}`, col1X, startY + 18 * lineHeight);
+      doc.setFont(undefined, "italic");
+      doc.text("(En España el IBAN consta de 24 posiciones comenzando siempre por ES)", col1X, startY + 19 * lineHeight);
+
+      doc.setFont(undefined, "bold");
+      doc.text("Contactos de Emergencia (Opcional)", col1X, startY + 21 * lineHeight);
+      doc.setFont(undefined, "normal");
+      doc.text(`Nombre (Persona de contacto): ${emp.emergencia1 || ""}`, col1X, startY + 22 * lineHeight);
+      doc.text(`Parentesco:`, col1X, startY + 23 * lineHeight);
+      doc.text(`Teléfono:`, col1X, startY + 24 * lineHeight);
+
+      doc.setFont(undefined, "bold");
+      doc.text("Firma y Fecha", col1X, startY + 26 * lineHeight);
+      doc.setFont(undefined, "normal");
+      doc.text(`Fecha: ${emp.fechaRegistro}`, col1X, startY + 27 * lineHeight);
+
+      if(emp.firma){
+        const img = new Image();
+        img.src = emp.firma;
+        img.onload = () => {
+          doc.addImage(img, "PNG", col1X, startY + 29 * lineHeight, 60, 30);
+          addFooter(doc);
+          doc.save(`Ficha_Empleado_${emp.id}.pdf`);
+        };
+      } else {
+        addFooter(doc);
+        doc.save(`Ficha_Empleado_${emp.id}.pdf`);
+      }
+    }
+
+    function addFooter(doc) {
+      doc.setFontSize(7);
+      doc.text("*RECUERDE LA IMPORTANCIA DE COMUNICAR CUALQUIER VARIACIÓN Y/O MODIFICACIÓN DE DATOS*", 105, 280, null, null, "center");
+
+      doc.setFontSize(6);
+      doc.text("Información básica sobre Protección de Datos", 105, 285, null, null, "center");
+      doc.text("RESPONSABLE: Tratamiento Integral Del Agua Aquadama, S.L.U. | FINALIDAD DEL TRATAMIENTO: Gestión inherente a la relación laboral. | LEGITIMACIÓN: Consentimiento del interesado/a e interés legítimo del Responsable.", 105, 290, {maxWidth: 180, align: "center"});
+      doc.text("DESTINATARIOS: No se cederán datos a terceros, salvo obligación legal o cumplimiento de la normativa que resulte de aplicación.", 105, 295, {maxWidth: 180, align: "center"});
+      doc.text("DERECHOS: Usted podrá solicitar el acceso, rectificación y/o supresión de sus datos, así como otros derechos, como se explica en la información adicional.", 105, 300, {maxWidth: 180, align: "center"});
+      doc.text("Puede consultar la información adicional y detallada sobre Protección de Datos en:", 105, 305, {maxWidth: 180, align: "center"});
+      doc.text("http://aquadama.avisolegal.info/RRHH-DATOS_TRABAJADOR-A/datos_trabajador-a.html", 105, 310, {maxWidth: 180, align: "center", link: "http://aquadama.avisolegal.info/RRHH-DATOS_TRABAJADOR-A/datos_trabajador-a.html"});
+      doc.text("DELEGADO PROTECCIÓN DE DATOS: Tratamiento Integral Del Agua Aquadama, S.L.U.", 105, 315, {maxWidth: 180, align: "center"});
+      doc.text("Puede consultar la NORMATIVA VIGENTE DE PROTECCIÓN DE DATOS PERSONALES en:", 105, 320, {maxWidth: 180, align: "center"});
+      doc.text("http://normativa.avisolegal.info", 105, 325, {maxWidth: 180, align: "center", link: "http://normativa.avisolegal.info"});
+    }
+
     document.getElementById("createAdminForm").addEventListener("submit", e => {
       e.preventDefault();
       const user = document.getElementById("newAdminUser").value.trim();
@@ -145,28 +278,6 @@
       e.target.reset();
       alert("✅ Contraseña actualizada");
     });
-
-    function renderAdminList() {
-      const list = document.getElementById("adminList");
-      list.innerHTML = "";
-      for (const user in admins) {
-        const li = document.createElement("li");
-        li.textContent = user;
-        if (user !== "javierit") {
-          const del = document.createElement("button");
-          del.textContent = "❌";
-          del.onclick = () => {
-            if (confirm(`¿Eliminar al admin '${user}'?`)) {
-              delete admins[user];
-              localStorage.setItem("aquadama_admins", JSON.stringify(admins));
-              renderAdminList();
-            }
-          };
-          li.appendChild(del);
-        }
-        list.appendChild(li);
-      }
-    }
 
     document.addEventListener("DOMContentLoaded", () => {
       showPanel("panel-empleados");
