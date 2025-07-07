@@ -7,16 +7,8 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="login-container" id="loginContainer">
-    <h2>Acceso Administrador</h2>
-    <form id="loginForm">
-      <label>Usuario:<input type="text" id="loginUser" required /></label>
-      <label>Contraseña:<input type="password" id="loginPass" required /></label>
-      <button type="submit">Iniciar Sesión</button>
-    </form>
-  </div>
-
-  <div class="container hidden" id="mainContainer">
+  <!-- Formulario público accesible sin login -->
+  <div class="container" id="publicFormContainer">
     <h1>Registro de Empleados</h1>
     <form id="employeeForm">
       <fieldset>
@@ -71,8 +63,20 @@
 
       <button type="submit">Registrar Empleado</button>
     </form>
+  </div>
 
-    <hr />
+  <!-- Acceso privado solo para administradores -->
+  <div class="login-container" id="loginContainer">
+    <h2>Acceso Administrador</h2>
+    <form id="loginForm">
+      <label>Usuario:<input type="text" id="loginUser" required /></label>
+      <label>Contraseña:<input type="password" id="loginPass" required /></label>
+      <button type="submit">Iniciar Sesión</button>
+    </form>
+  </div>
+
+  <div class="container hidden" id="mainContainer">
+    <h1>Panel de Administración</h1>
     <div id="employeeList"></div>
   </div>
 
