@@ -53,7 +53,6 @@
 
   <script>
     const admins = JSON.parse(localStorage.getItem("aquadama_admins") || "{}");
-    const employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
     const { jsPDF } = window.jspdf;
 
     document.getElementById("logout").addEventListener("click", () => {
@@ -73,7 +72,9 @@
     function loadEmployeeList() {
       const list = document.getElementById("employeeList");
       list.innerHTML = "";
-
+      
+      const employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
+      
       if (employees.length === 0) {
         list.innerHTML = "<p>No hay empleados registrados.</p>";
         return;
@@ -111,6 +112,7 @@
 
     function deleteEmployee(index) {
       if (confirm("¿Eliminar este empleado?")) {
+        const employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
         employees.splice(index, 1);
         localStorage.setItem("aquadama_employees", JSON.stringify(employees));
         loadEmployeeList();
@@ -134,8 +136,8 @@
       document.body.removeChild(a);
     }
 
-    // PDF generation function adapted to your last request (detailed design) here:
     function generarPDF(index) {
+      const employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
       const emp = employees[index];
       const doc = new jsPDF();
 
@@ -167,14 +169,14 @@
       doc.text("Sexo:", col1X, startY + 4 * lineHeight);
       doc.text("Fecha de nacimiento:", col2X, startY + 4 * lineHeight);
       doc.setFont(undefined, "normal");
-      doc.text("", col1X, startY + 5 * lineHeight); // Sexo no capturado en formulario
+      doc.text("", col1X, startY + 5 * lineHeight);
       doc.text(emp.fechaNacimiento, col2X, startY + 5 * lineHeight);
 
       doc.setFont(undefined, "bold");
       doc.text("Lugar:", col1X, startY + 6 * lineHeight);
       doc.text("Estado civil:", col2X, startY + 6 * lineHeight);
       doc.setFont(undefined, "normal");
-      doc.text("", col1X, startY + 7 * lineHeight); // Lugar no capturado
+      doc.text("", col1X, startY + 7 * lineHeight);
       doc.text(emp.estadoCivil || "", col2X, startY + 7 * lineHeight);
 
       doc.setFont(undefined, "bold");
@@ -278,6 +280,28 @@
       e.target.reset();
       alert("✅ Contraseña actualizada");
     });
+
+    function renderAdminList() {
+      const list = document.getElementById("adminList");
+      list.innerHTML = "";
+      for (const user in admins) {
+        const li = document.createElement("li");
+        li.textContent = user;
+        if (user !== "javierit") {
+          const del = document.createElement("button");
+          del.textContent = "❌";
+          del.onclick = () => {
+            if (confirm(`¿Eliminar al admin '${user}'?`)) {
+              delete admins[user];
+              localStorage.setItem("aquadama_admins", JSON.stringify(admins));
+              renderAdminList();
+            }
+          };
+          li.appendChild(del);
+        }
+        list.appendChild(li);
+      }
+    }
 
     document.addEventListener("DOMContentLoaded", () => {
       showPanel("panel-empleados");
