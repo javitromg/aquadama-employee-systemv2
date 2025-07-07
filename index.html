@@ -8,7 +8,6 @@
 </head>
 <body>
   <main>
-    <!-- Formulario público accesible -->
     <section class="container" id="publicFormContainer">
       <h1>Formulario de Registro de Empleados</h1>
       <form id="employeeForm" autocomplete="off">
@@ -43,9 +42,9 @@
 
         <fieldset>
           <legend>Contactos de Emergencia</legend>
-          <label>Contacto 1:<input type="text" name="emergencia1" placeholder="Nombre y teléfono" /></label>
-          <label>Contacto 2:<input type="text" name="emergencia2" placeholder="Nombre y teléfono" /></label>
-          <label>Contacto 3:<input type="text" name="emergencia3" placeholder="Nombre y teléfono" /></label>
+          <label>Contacto 1:<input type="text" name="emergencia1" /></label>
+          <label>Contacto 2:<input type="text" name="emergencia2" /></label>
+          <label>Contacto 3:<input type="text" name="emergencia3" /></label>
         </fieldset>
 
         <fieldset>
@@ -65,7 +64,6 @@
       </form>
     </section>
 
-    <!-- Login de administrador -->
     <section class="login-container" id="loginContainer">
       <h2>Acceso al Panel de Administración</h2>
       <form id="loginForm" autocomplete="off">
@@ -73,33 +71,6 @@
         <label>Contraseña:<input type="password" id="loginPass" required /></label>
         <button type="submit">Iniciar Sesión</button>
       </form>
-    </section>
-
-    <!-- Panel de administración (privado) -->
-    <section class="container hidden" id="mainContainer">
-      <h1>Panel de Administración</h1>
-
-      <section id="employeeList"></section>
-
-      <hr />
-      <section id="adminUserPanel">
-        <h2>Gestión de Administradores</h2>
-        <form id="createAdminForm">
-          <label>Nuevo Usuario:<input type="text" id="newAdminUser" required /></label>
-          <label>Contraseña:<input type="password" id="newAdminPass" required /></label>
-          <button type="submit">Crear Administrador</button>
-        </form>
-
-        <h3>Lista de Administradores</h3>
-        <ul id="adminList"></ul>
-
-        <h3>Cambiar Contraseña del Administrador</h3>
-        <form id="changePassForm">
-          <label>Contraseña Actual:<input type="password" id="currentPass" required /></label>
-          <label>Nueva Contraseña:<input type="password" id="newPass" required /></label>
-          <button type="submit">Cambiar Contraseña</button>
-        </form>
-      </section>
     </section>
   </main>
 
