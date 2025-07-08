@@ -5,7 +5,7 @@ const DEFAULT_PASS = "Ab915712@";
 
 let canvas, ctx, isDrawing = false;
 
-// Cargar admins o crear el admin por defecto
+// Cargar admins o crear admin por defecto
 let admins = JSON.parse(localStorage.getItem("aquadama_admins") || "{}");
 if (!admins[DEFAULT_USER]) {
   admins[DEFAULT_USER] = DEFAULT_PASS;
@@ -29,6 +29,21 @@ function setupEmployeeForm() {
   canvas = document.getElementById("signaturePad");
   ctx = canvas.getContext("2d");
 
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    if (e.touches) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top,
+      };
+    } else {
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      };
+    }
+  }
+
   function startDrawing(e) {
     e.preventDefault();
     isDrawing = true;
@@ -47,20 +62,6 @@ function setupEmployeeForm() {
     e.preventDefault();
     isDrawing = false;
   }
-  function getPos(e) {
-    let rect = canvas.getBoundingClientRect();
-    if (e.touches) {
-      return {
-        x: e.touches[0].clientX - rect.left,
-        y: e.touches[0].clientY - rect.top,
-      };
-    } else {
-      return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      };
-    }
-  }
 
   canvas.addEventListener("mousedown", startDrawing);
   canvas.addEventListener("mousemove", draw);
@@ -72,45 +73,59 @@ function setupEmployeeForm() {
   canvas.addEventListener("touchend", stopDrawing);
   canvas.addEventListener("touchcancel", stopDrawing);
 
+  document.getElementById("clearSignature").addEventListener("click", () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  });
+
   document.getElementById("employeeForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const fd = new FormData(e.target);
+
+    // Validar firma no vacía
+    const blank = document.createElement("canvas");
+    blank.width = canvas.width;
+    blank.height = canvas.height;
+    if (canvas.toDataURL() === blank.toDataURL()) {
+      alert("Por favor, firme antes de registrar");
+      return;
+    }
+
+    const formData = new FormData(e.target);
     const emp = {};
-    for (let [k, v] of fd.entries()) {
-      emp[k] = v;
+
+    for (let [key, value] of formData.entries()) {
+      emp[key] = value;
     }
 
     async function toBase64(file) {
-      return new Promise((resolve, reject) => {
-        if (!file) resolve("");
-        const reader = new FileReader();
-        reader.onload = (ev) => resolve(ev.target.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
+      return new Promise((resolve) => {
+        if (!file || file.size === 0) resolve("");
+        else {
+          const reader = new FileReader();
+          reader.onload = (ev) => resolve(ev.target.result);
+          reader.readAsDataURL(file);
+        }
       });
     }
 
-    emp.fotoDNIDelante = await toBase64(fd.get("fotoDNIDelante"));
-    emp.fotoDNIDetras = await toBase64(fd.get("fotoDNIDetras"));
-    emp.fotoPersonal = await toBase64(fd.get("fotoPersonal"));
+    emp.fotoDNIDelante = await toBase64(formData.get("fotoDNIDelante"));
+    emp.fotoDNIDetras = await toBase64(formData.get("fotoDNIDetras"));
+    emp.fotoPersonal = await toBase64(formData.get("fotoPersonal"));
     emp.firma = canvas.toDataURL();
 
     let employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
     let employeeCounter = parseInt(localStorage.getItem("aquadama_counter") || "0");
+
     emp.id = ++employeeCounter;
     emp.fechaRegistro = new Date().toLocaleDateString("es-ES");
 
     employees.push(emp);
+
     localStorage.setItem("aquadama_employees", JSON.stringify(employees));
     localStorage.setItem("aquadama_counter", employeeCounter.toString());
 
-    e.target.reset();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     alert("✅ Empleado registrado correctamente");
-  });
 
-  document.getElementById("clearSignature").addEventListener("click", () => {
+    e.target.reset();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   });
 }
