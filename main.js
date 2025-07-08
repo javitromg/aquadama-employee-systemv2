@@ -23,6 +23,55 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// Función para redimensionar imagen antes de convertir a base64
+async function resizeImage(file, maxWidth = 800, maxHeight = 600) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const canvasResize = document.createElement("canvas");
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth || height > maxHeight) {
+          if (width / height > maxWidth / maxHeight) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          } else {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        canvasResize.width = width;
+        canvasResize.height = height;
+        const ctxResize = canvasResize.getContext("2d");
+        ctxResize.clearRect(0, 0, width, height);
+        ctxResize.drawImage(img, 0, 0, width, height);
+
+        resolve(canvasResize.toDataURL("image/jpeg", 0.7)); // calidad 70%
+      };
+      img.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("employeeForm")) {
+    setupEmployeeForm();
+  }
+  if (document.getElementById("loginForm")) {
+    setupLoginForm();
+  }
+  if (document.querySelector(".sidebar")) {
+    setupAdminPanel();
+  }
+});
+
 // --- FORMULARIO EMPLEADOS ---
 function setupEmployeeForm() {
   canvas = document.getElementById("signaturePad");
@@ -87,23 +136,9 @@ function setupEmployeeForm() {
         emp[key] = value;
       }
 
-      console.log("Foto DNI Delante:", formData.get("fotoDNIDelante"));
-      console.log("Foto DNI Detrás:", formData.get("fotoDNIDetras"));
-      console.log("Foto Personal:", formData.get("fotoPersonal"));
-
       async function toBase64(file) {
-        return new Promise((resolve) => {
-          if (!file || file.size === 0) resolve("");
-          else {
-            const reader = new FileReader();
-            reader.onload = (ev) => resolve(ev.target.result);
-            reader.onerror = (err) => {
-              console.error("Error leyendo archivo:", err);
-              resolve("");
-            };
-            reader.readAsDataURL(file);
-          }
-        });
+        if (!file || file.size === 0) return "";
+        return await resizeImage(file);
       }
 
       emp.fotoDNIDelante = await toBase64(formData.get("fotoDNIDelante"));
