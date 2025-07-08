@@ -83,10 +83,18 @@ legend {
   padding: 0 10px;
 }
 
+/* Canvas firma: ajuste táctil iPhone y móviles */
 canvas {
   border: 1px solid #999;
   background-color: #fff;
   width: 100%;
   max-width: 400px;
   margin-bottom: 10px;
+
+  /* Para evitar scroll y selección al firmar */
+  touch-action: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
