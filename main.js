@@ -68,10 +68,11 @@ function setupEmployeeForm() {
   canvas.addEventListener("mouseup", stopDrawing);
   canvas.addEventListener("mouseout", stopDrawing);
 
-  canvas.addEventListener("touchstart", startDrawing);
-  canvas.addEventListener("touchmove", draw);
-  canvas.addEventListener("touchend", stopDrawing);
-  canvas.addEventListener("touchcancel", stopDrawing);
+  // Eventos táctiles con passive: false para iOS
+  canvas.addEventListener("touchstart", startDrawing, { passive: false });
+  canvas.addEventListener("touchmove", draw, { passive: false });
+  canvas.addEventListener("touchend", stopDrawing, { passive: false });
+  canvas.addEventListener("touchcancel", stopDrawing, { passive: false });
 
   document.getElementById("clearSignature").addEventListener("click", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
