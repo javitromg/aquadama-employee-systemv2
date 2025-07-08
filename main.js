@@ -1,73 +1,90 @@
 // main.js
 
-// Constantes de usuario admin por defecto
 const DEFAULT_USER = "javierit";
 const DEFAULT_PASS = "Ab915712@";
 
 let canvas, ctx, isDrawing = false;
 
-// Carga admins desde localStorage o crea admin por defecto
+// Cargar admins o crear el admin por defecto
 let admins = JSON.parse(localStorage.getItem("aquadama_admins") || "{}");
 if (!admins[DEFAULT_USER]) {
   admins[DEFAULT_USER] = DEFAULT_PASS;
   localStorage.setItem("aquadama_admins", JSON.stringify(admins));
 }
 
-// Detecta la página actual por existencia de elementos
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("employeeForm")) {
     setupEmployeeForm();
   }
-
   if (document.getElementById("loginForm")) {
     setupLoginForm();
   }
-
   if (document.querySelector(".sidebar")) {
     setupAdminPanel();
   }
 });
 
-// ---------- FUNCIONES FORMULARIO EMPLEADOS (index.html) ----------
+// --- FORMULARIO EMPLEADOS ---
 function setupEmployeeForm() {
   canvas = document.getElementById("signaturePad");
   ctx = canvas.getContext("2d");
 
-  canvas.addEventListener("mousedown", e => {
-    isDrawing = true;
-    ctx.beginPath();
-    ctx.moveTo(e.offsetX, e.offsetY);
-  });
-
-  canvas.addEventListener("mousemove", e => {
-    if (!isDrawing) return;
-    ctx.lineTo(e.offsetX, e.offsetY);
-    ctx.stroke();
-  });
-
-  canvas.addEventListener("mouseup", () => {
-    isDrawing = false;
-  });
-
-  canvas.addEventListener("mouseleave", () => {
-    isDrawing = false;
-  });
-
-  document.getElementById("employeeForm").addEventListener("submit", async e => {
+  function startDrawing(e) {
     e.preventDefault();
+    isDrawing = true;
+    const pos = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+  }
+  function draw(e) {
+    e.preventDefault();
+    if (!isDrawing) return;
+    const pos = getPos(e);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+  }
+  function stopDrawing(e) {
+    e.preventDefault();
+    isDrawing = false;
+  }
+  function getPos(e) {
+    let rect = canvas.getBoundingClientRect();
+    if (e.touches) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top,
+      };
+    } else {
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      };
+    }
+  }
 
+  canvas.addEventListener("mousedown", startDrawing);
+  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("mouseup", stopDrawing);
+  canvas.addEventListener("mouseout", stopDrawing);
+
+  canvas.addEventListener("touchstart", startDrawing);
+  canvas.addEventListener("touchmove", draw);
+  canvas.addEventListener("touchend", stopDrawing);
+  canvas.addEventListener("touchcancel", stopDrawing);
+
+  document.getElementById("employeeForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
     const fd = new FormData(e.target);
     const emp = {};
-    for (let [key, value] of fd.entries()) {
-      emp[key] = value;
+    for (let [k, v] of fd.entries()) {
+      emp[k] = v;
     }
 
-    // Función para convertir archivo a base64
     async function toBase64(file) {
       return new Promise((resolve, reject) => {
         if (!file) resolve("");
         const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
+        reader.onload = (ev) => resolve(ev.target.result);
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
@@ -76,11 +93,8 @@ function setupEmployeeForm() {
     emp.fotoDNIDelante = await toBase64(fd.get("fotoDNIDelante"));
     emp.fotoDNIDetras = await toBase64(fd.get("fotoDNIDetras"));
     emp.fotoPersonal = await toBase64(fd.get("fotoPersonal"));
-
-    // Firma canvas a base64
     emp.firma = canvas.toDataURL();
 
-    // ID y fecha
     let employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
     let employeeCounter = parseInt(localStorage.getItem("aquadama_counter") || "0");
     emp.id = ++employeeCounter;
@@ -101,9 +115,9 @@ function setupEmployeeForm() {
   });
 }
 
-// ---------- FUNCIONES LOGIN (login.html) ----------
+// --- LOGIN ---
 function setupLoginForm() {
-  document.getElementById("loginForm").addEventListener("submit", e => {
+  document.getElementById("loginForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const user = document.getElementById("loginUser").value.trim();
     const pass = document.getElementById("loginPass").value.trim();
@@ -116,13 +130,13 @@ function setupLoginForm() {
   });
 }
 
-// ---------- FUNCIONES PANEL ADMIN (admin.html) ----------
+// --- ADMIN PANEL ---
 function setupAdminPanel() {
   const { jsPDF } = window.jspdf;
 
   document.getElementById("logout").addEventListener("click", () => {
     sessionStorage.removeItem("authToken");
-    location.href = "login.html";
+    window.location.href = "login.html";
   });
 
   document.getElementById("nav-empleados").addEventListener("click", () => showPanel("panel-empleados"));
@@ -130,7 +144,7 @@ function setupAdminPanel() {
   document.getElementById("nav-pass").addEventListener("click", () => showPanel("panel-pass"));
 
   function showPanel(id) {
-    document.querySelectorAll(".main-content section").forEach(sec => sec.classList.add("hidden"));
+    document.querySelectorAll(".main-content section").forEach((s) => s.classList.add("hidden"));
     document.getElementById(id).classList.remove("hidden");
   }
 
@@ -172,24 +186,24 @@ function setupAdminPanel() {
     });
   }
 
-  window.toggleDetails = function(id) {
-    const section = document.getElementById("details-" + id);
+  window.toggleDetails = function (id) {
+    const details = document.getElementById("details-" + id);
     const btn = document.getElementById("toggle-btn-" + id);
-    const hidden = section.classList.contains("hidden");
-    section.classList.toggle("hidden");
+    const hidden = details.classList.contains("hidden");
+    details.classList.toggle("hidden");
     btn.textContent = hidden ? "🔼 Ocultar Detalles" : "🔽 Ver Detalles";
   };
 
-  window.deleteEmployee = function(index) {
+  window.deleteEmployee = function (index) {
     if (confirm("¿Eliminar este empleado?")) {
-      const employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
+      let employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
       employees.splice(index, 1);
       localStorage.setItem("aquadama_employees", JSON.stringify(employees));
       loadEmployeeList();
     }
   };
 
-  window.downloadFile = function(dataUrl, filename) {
+  window.downloadFile = function (dataUrl, filename) {
     const a = document.createElement("a");
     a.href = dataUrl;
     a.download = filename;
@@ -198,12 +212,11 @@ function setupAdminPanel() {
     document.body.removeChild(a);
   };
 
-  window.generarPDF = function(index) {
+  window.generarPDF = function (index) {
     const employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
     const emp = employees[index];
     const doc = new jsPDF();
 
-    // Diseño profesional
     doc.setFont("helvetica");
     doc.setDrawColor(0);
     doc.setFillColor(230, 240, 255);
@@ -217,7 +230,14 @@ function setupAdminPanel() {
 
     doc.setTextColor(40, 40, 40);
     doc.setFontSize(10);
-    doc.text("Los datos solicitados son los necesarios e inherentes a la relación laboral y su correcto funcionamiento.", 105, 27, null, null, "center");
+    doc.text(
+      "Los datos solicitados son los necesarios e inherentes a la relación laboral y su correcto funcionamiento.",
+      105,
+      27,
+      null,
+      null,
+      "center"
+    );
 
     let y = 35;
     const lineHeight = 8;
@@ -315,7 +335,7 @@ function setupAdminPanel() {
     doc.setFont(undefined, "normal");
     doc.setTextColor(40, 40, 40);
     doc.setFontSize(10);
-    doc.text(`Nombre (Persona de contacto): ${emp.emergencia1 || "-"}`, col1X, y);
+    doc.text(`Nombre (Persona de contacto): ${emp.nombreContacto || "-"}`, col1X, y);
     y += lineHeight;
     doc.text(`Parentesco: ${emp.parentescoContacto || "-"}`, col1X, y);
     y += lineHeight;
@@ -333,7 +353,7 @@ function setupAdminPanel() {
     doc.setFontSize(10);
     doc.text(`Fecha: ${emp.fechaRegistro}`, col1X + 2, y + 20);
 
-    if(emp.firma){
+    if (emp.firma) {
       const img = new Image();
       img.src = emp.firma;
       img.onload = () => {
@@ -350,79 +370,21 @@ function setupAdminPanel() {
   function addFooter(doc) {
     doc.setFontSize(7);
     doc.setTextColor(100);
-    doc.text(
-      "*RECUERDE LA IMPORTANCIA DE COMUNICAR CUALQUIER VARIACIÓN Y/O MODIFICACIÓN DE DATOS*",
-      105,
-      280,
-      null,
-      null,
-      "center"
-    );
+    doc.text("*RECUERDE LA IMPORTANCIA DE COMUNICAR CUALQUIER VARIACIÓN Y/O MODIFICACIÓN DE DATOS*", 105, 280, null, null, "center");
 
     doc.setFontSize(6);
-    doc.text(
-      "Información básica sobre Protección de Datos",
-      105,
-      285,
-      null,
-      null,
-      "center"
-    );
-    doc.text(
-      "RESPONSABLE: Tratamiento Integral Del Agua Aquadama, S.L.U. | FINALIDAD DEL TRATAMIENTO: Gestión inherente a la relación laboral. | LEGITIMACIÓN: Consentimiento del interesado/a e interés legítimo del Responsable.",
-      105,
-      290,
-      { maxWidth: 180, align: "center" }
-    );
-    doc.text(
-      "DESTINATARIOS: No se cederán datos a terceros, salvo obligación legal o cumplimiento de la normativa que resulte de aplicación.",
-      105,
-      295,
-      { maxWidth: 180, align: "center" }
-    );
-    doc.text(
-      "DERECHOS: Usted podrá solicitar el acceso, rectificación y/o supresión de sus datos, así como otros derechos, como se explica en la información adicional.",
-      105,
-      300,
-      { maxWidth: 180, align: "center" }
-    );
-    doc.text(
-      "Puede consultar la información adicional y detallada sobre Protección de Datos en:",
-      105,
-      305,
-      { maxWidth: 180, align: "center" }
-    );
-    doc.text(
-      "http://aquadama.avisolegal.info/RRHH-DATOS_TRABAJADOR-A/datos_trabajador-a.html",
-      105,
-      310,
-      {
-        maxWidth: 180,
-        align: "center",
-        link: "http://aquadama.avisolegal.info/RRHH-DATOS_TRABAJADOR-A/datos_trabajador-a.html",
-      }
-    );
-    doc.text(
-      "DELEGADO PROTECCIÓN DE DATOS: Tratamiento Integral Del Agua Aquadama, S.L.U.",
-      105,
-      315,
-      { maxWidth: 180, align: "center" }
-    );
-    doc.text(
-      "Puede consultar la NORMATIVA VIGENTE DE PROTECCIÓN DE DATOS PERSONALES en:",
-      105,
-      320,
-      { maxWidth: 180, align: "center" }
-    );
-    doc.text(
-      "http://normativa.avisolegal.info",
-      105,
-      325,
-      { maxWidth: 180, align: "center", link: "http://normativa.avisolegal.info" }
-    );
+    doc.text("Información básica sobre Protección de Datos", 105, 285, null, null, "center");
+    doc.text("RESPONSABLE: Tratamiento Integral Del Agua Aquadama, S.L.U. | FINALIDAD DEL TRATAMIENTO: Gestión inherente a la relación laboral. | LEGITIMACIÓN: Consentimiento del interesado/a e interés legítimo del Responsable.", 105, 290, { maxWidth: 180, align: "center" });
+    doc.text("DESTINATARIOS: No se cederán datos a terceros, salvo obligación legal o cumplimiento de la normativa que resulte de aplicación.", 105, 295, { maxWidth: 180, align: "center" });
+    doc.text("DERECHOS: Usted podrá solicitar el acceso, rectificación y/o supresión de sus datos, así como otros derechos, como se explica en la información adicional.", 105, 300, { maxWidth: 180, align: "center" });
+    doc.text("Puede consultar la información adicional y detallada sobre Protección de Datos en:", 105, 305, { maxWidth: 180, align: "center" });
+    doc.text("http://aquadama.avisolegal.info/RRHH-DATOS_TRABAJADOR-A/datos_trabajador-a.html", 105, 310, { maxWidth: 180, align: "center", link: "http://aquadama.avisolegal.info/RRHH-DATOS_TRABAJADOR-A/datos_trabajador-a.html" });
+    doc.text("DELEGADO PROTECCIÓN DE DATOS: Tratamiento Integral Del Agua Aquadama, S.L.U.", 105, 315, { maxWidth: 180, align: "center" });
+    doc.text("Puede consultar la NORMATIVA VIGENTE DE PROTECCIÓN DE DATOS PERSONALES en:", 105, 320, { maxWidth: 180, align: "center" });
+    doc.text("http://normativa.avisolegal.info", 105, 325, { maxWidth: 180, align: "center", link: "http://normativa.avisolegal.info" });
   }
 
-  document.getElementById("createAdminForm").addEventListener("submit", e => {
+  document.getElementById("createAdminForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const user = document.getElementById("newAdminUser").value.trim();
     const pass = document.getElementById("newAdminPass").value.trim();
@@ -435,11 +397,11 @@ function setupAdminPanel() {
     alert("✅ Administrador creado");
   });
 
-  document.getElementById("changePassForm").addEventListener("submit", e => {
+  document.getElementById("changePassForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const current = document.getElementById("currentPass").value.trim();
     const newpass = document.getElementById("newPass").value.trim();
-    const user = Object.keys(admins).find(u => admins[u] === current);
+    const user = Object.keys(admins).find((u) => admins[u] === current);
     if (!user) return alert("❌ Contraseña actual incorrecta");
     admins[user] = newpass;
     localStorage.setItem("aquadama_admins", JSON.stringify(admins));
@@ -450,7 +412,7 @@ function setupAdminPanel() {
   function renderAdminList() {
     const list = document.getElementById("adminList");
     list.innerHTML = "";
-    for (const user in admins) {
+    for (let user in admins) {
       const li = document.createElement("li");
       li.textContent = user;
       if (user !== "javierit") {
