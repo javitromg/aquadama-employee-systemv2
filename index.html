@@ -4,27 +4,137 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Registro de Empleados | Aquadama</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    label { display: block; margin-bottom: 8px; }
-    input, button { padding: 6px; font-size: 14px; }
-    canvas { border: 1px solid #000; margin-top: 5px; }
+    /* Aseguramos que canvas sea táctil-friendly */
+    #signaturePad {
+      border: 1px solid #000;
+      touch-action: none; /* Previene scrolling mientras firmas */
+      width: 100%;
+      max-width: 400px;
+      height: 150px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 4px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      font-size: 16px;
+      background-color: #0f4c81;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0b3a5a;
+    }
+    .form-section {
+      max-width: 500px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
   <h1>Registro de Empleados</h1>
-  <form id="employeeForm" enctype="multipart/form-data">
-    <label>Nombre: <input type="text" name="nombre" required /></label>
-    <label>Apellidos: <input type="text" name="apellidos" required /></label>
-    <label>DNI: <input type="text" name="dni" required /></label>
-    <label>Fecha de nacimiento: <input type="date" name="fechaNacimiento" required /></label>
-    <label>Nacionalidad: <input type="text" name="nacionalidad" required /></label>
 
-    <label>Foto DNI Delante: <input type="file" name="fotoDNIDelante" accept="image/*" required /></label>
-    <label>Foto DNI Detrás: <input type="file" name="fotoDNIDetras" accept="image/*" required /></label>
-    <label>Foto Personal: <input type="file" name="fotoPersonal" accept="image/*" required /></label>
+  <form id="employeeForm" enctype="multipart/form-data" class="form-section">
 
-    <label>Firma:</label>
+    <label for="nombre">Nombre</label>
+    <input type="text" id="nombre" name="nombre" required />
+
+    <label for="apellidos">Apellidos</label>
+    <input type="text" id="apellidos" name="apellidos" required />
+
+    <label for="dni">DNI</label>
+    <input type="text" id="dni" name="dni" required />
+
+    <label for="ss">Número Seguridad Social</label>
+    <input type="text" id="ss" name="ss" required />
+
+    <label for="fechaNacimiento">Fecha de nacimiento</label>
+    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required />
+
+    <label for="nacionalidad">Nacionalidad</label>
+    <input type="text" id="nacionalidad" name="nacionalidad" required />
+
+    <label for="sexo">Sexo</label>
+    <select id="sexo" name="sexo" required>
+      <option value="" disabled selected>Selecciona</option>
+      <option value="Masculino">Masculino</option>
+      <option value="Femenino">Femenino</option>
+      <option value="Otro">Otro</option>
+    </select>
+
+    <label for="lugarNacimiento">Lugar de nacimiento</label>
+    <input type="text" id="lugarNacimiento" name="lugarNacimiento" required />
+
+    <label for="estadoCivil">Estado civil</label>
+    <select id="estadoCivil" name="estadoCivil" required>
+      <option value="" disabled selected>Selecciona</option>
+      <option value="Soltero/a">Soltero/a</option>
+      <option value="Casado/a">Casado/a</option>
+      <option value="Divorciado/a">Divorciado/a</option>
+      <option value="Viudo/a">Viudo/a</option>
+    </select>
+
+    <label for="hijos">Número de hijos</label>
+    <input type="number" id="hijos" name="hijos" min="0" value="0" required />
+
+    <label for="telefono">Teléfono</label>
+    <input type="tel" id="telefono" name="telefono" required />
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required />
+
+    <label for="formacion">Formación Oficial</label>
+    <input type="text" id="formacion" name="formacion" />
+
+    <label for="direccion">Dirección</label>
+    <input type="text" id="direccion" name="direccion" required />
+
+    <label for="cp">Código postal</label>
+    <input type="text" id="cp" name="cp" required />
+
+    <label for="localidad">Población</label>
+    <input type="text" id="localidad" name="localidad" required />
+
+    <label for="provincia">Provincia</label>
+    <input type="text" id="provincia" name="provincia" required />
+
+    <label for="iban">Número de cuenta - IBAN</label>
+    <input type="text" id="iban" name="iban" required placeholder="ESXXXXXXXXXXXXXX" />
+
+    <label for="nombreContacto">Nombre contacto emergencia (opcional)</label>
+    <input type="text" id="nombreContacto" name="nombreContacto" />
+
+    <label for="parentescoContacto">Parentesco contacto emergencia (opcional)</label>
+    <input type="text" id="parentescoContacto" name="parentescoContacto" />
+
+    <label for="telefonoContacto">Teléfono contacto emergencia (opcional)</label>
+    <input type="tel" id="telefonoContacto" name="telefonoContacto" />
+
+    <label for="fotoDNIDelante">Foto DNI Delante</label>
+    <input type="file" id="fotoDNIDelante" name="fotoDNIDelante" accept="image/*" required />
+
+    <label for="fotoDNIDetras">Foto DNI Detrás</label>
+    <input type="file" id="fotoDNIDetras" name="fotoDNIDetras" accept="image/*" required />
+
+    <label for="fotoPersonal">Foto Personal</label>
+    <input type="file" id="fotoPersonal" name="fotoPersonal" accept="image/*" required />
+
+    <label>Firma</label>
     <canvas id="signaturePad" width="400" height="150"></canvas><br />
     <button type="button" id="clearSignature">Limpiar Firma</button>
 
