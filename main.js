@@ -5,7 +5,6 @@ const DEFAULT_PASS = "Ab915712@";
 
 let canvas, ctx, isDrawing = false;
 
-// Cargar admins o crear admin por defecto
 let admins = JSON.parse(localStorage.getItem("aquadama_admins") || "{}");
 if (!admins[DEFAULT_USER]) {
   admins[DEFAULT_USER] = DEFAULT_PASS;
@@ -80,55 +79,57 @@ function setupEmployeeForm() {
   document.getElementById("employeeForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // VALIDACIÓN DE FIRMA DESACTIVADA
-    /*
-    const blank = document.createElement("canvas");
-    blank.width = canvas.width;
-    blank.height = canvas.height;
-    if (canvas.toDataURL() === blank.toDataURL()) {
-      alert("Por favor, firme antes de registrar");
-      return;
+    try {
+      const formData = new FormData(e.target);
+      const emp = {};
+
+      for (let [key, value] of formData.entries()) {
+        emp[key] = value;
+      }
+
+      console.log("Foto DNI Delante:", formData.get("fotoDNIDelante"));
+      console.log("Foto DNI Detrás:", formData.get("fotoDNIDetras"));
+      console.log("Foto Personal:", formData.get("fotoPersonal"));
+
+      async function toBase64(file) {
+        return new Promise((resolve) => {
+          if (!file || file.size === 0) resolve("");
+          else {
+            const reader = new FileReader();
+            reader.onload = (ev) => resolve(ev.target.result);
+            reader.onerror = (err) => {
+              console.error("Error leyendo archivo:", err);
+              resolve("");
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      emp.fotoDNIDelante = await toBase64(formData.get("fotoDNIDelante"));
+      emp.fotoDNIDetras = await toBase64(formData.get("fotoDNIDetras"));
+      emp.fotoPersonal = await toBase64(formData.get("fotoPersonal"));
+      emp.firma = canvas.toDataURL();
+
+      let employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
+      let employeeCounter = parseInt(localStorage.getItem("aquadama_counter") || "0");
+
+      emp.id = ++employeeCounter;
+      emp.fechaRegistro = new Date().toLocaleDateString("es-ES");
+
+      employees.push(emp);
+
+      localStorage.setItem("aquadama_employees", JSON.stringify(employees));
+      localStorage.setItem("aquadama_counter", employeeCounter.toString());
+
+      alert("✅ Empleado registrado correctamente");
+
+      e.target.reset();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    } catch (err) {
+      alert("❌ Error al procesar el formulario: " + err.message);
+      console.error(err);
     }
-    */
-
-    const formData = new FormData(e.target);
-    const emp = {};
-
-    for (let [key, value] of formData.entries()) {
-      emp[key] = value;
-    }
-
-    async function toBase64(file) {
-      return new Promise((resolve) => {
-        if (!file || file.size === 0) resolve("");
-        else {
-          const reader = new FileReader();
-          reader.onload = (ev) => resolve(ev.target.result);
-          reader.readAsDataURL(file);
-        }
-      });
-    }
-
-    emp.fotoDNIDelante = await toBase64(formData.get("fotoDNIDelante"));
-    emp.fotoDNIDetras = await toBase64(formData.get("fotoDNIDetras"));
-    emp.fotoPersonal = await toBase64(formData.get("fotoPersonal"));
-    emp.firma = canvas.toDataURL();
-
-    let employees = JSON.parse(localStorage.getItem("aquadama_employees") || "[]");
-    let employeeCounter = parseInt(localStorage.getItem("aquadama_counter") || "0");
-
-    emp.id = ++employeeCounter;
-    emp.fechaRegistro = new Date().toLocaleDateString("es-ES");
-
-    employees.push(emp);
-
-    localStorage.setItem("aquadama_employees", JSON.stringify(employees));
-    localStorage.setItem("aquadama_counter", employeeCounter.toString());
-
-    alert("✅ Empleado registrado correctamente");
-
-    e.target.reset();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
   });
 }
 
