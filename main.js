@@ -68,7 +68,6 @@ function setupEmployeeForm() {
   canvas.addEventListener("mouseup", stopDrawing);
   canvas.addEventListener("mouseout", stopDrawing);
 
-  // Eventos táctiles con passive: false para iOS
   canvas.addEventListener("touchstart", startDrawing, { passive: false });
   canvas.addEventListener("touchmove", draw, { passive: false });
   canvas.addEventListener("touchend", stopDrawing, { passive: false });
@@ -81,7 +80,8 @@ function setupEmployeeForm() {
   document.getElementById("employeeForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Validar firma no vacía
+    // VALIDACIÓN DE FIRMA DESACTIVADA
+    /*
     const blank = document.createElement("canvas");
     blank.width = canvas.width;
     blank.height = canvas.height;
@@ -89,6 +89,7 @@ function setupEmployeeForm() {
       alert("Por favor, firme antes de registrar");
       return;
     }
+    */
 
     const formData = new FormData(e.target);
     const emp = {};
